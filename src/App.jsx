@@ -6,7 +6,8 @@ import {
   Navigate,
 } from "react-router-dom";
 import Home from "./pages/Home";
-import Producto from "./pages/Producto";
+import ProductosPage from "./pages/ProductosPage";
+import CategoriasPage from "./pages/CategoriasPage";
 import ClientesPage from "./pages/ClientesPage";
 import ProveedoresPage from "./pages/ProveedoresPage";
 import Login from "./pages/Login";
@@ -37,6 +38,8 @@ function App() {
             <Route path="/dashboard" element={<Home />} />
             <Route path="/clientes" element={<ClientesPage />} />
             <Route path="/proveedores" element={<ProveedoresPage />} />
+            <Route path="/productos" element={<ProductosPage />} />
+            <Route path="/categorias" element={<CategoriasPage />} />
             {/* <Route path="/products" element={<Products />} /> */}
             {/* Agrega más rutas según sea necesario */}
           </Route>
