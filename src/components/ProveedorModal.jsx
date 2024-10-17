@@ -28,7 +28,7 @@ const ProveedorModal = ({ open, onClose, selectedProveedor, onSave, isEditing })
         direccion: "",
       });
     }
-  }, [isEditing, selectedProveedor]);
+  }, [isEditing, selectedProveedor, open]);
 
   // Manejador para actualizar el estado del formulario en cada cambio de input
   const onChange = (e) => {

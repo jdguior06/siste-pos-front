@@ -14,13 +14,12 @@ const ProductoModal = ({
   const [formData, setFormData] = useState({
     codigo: "", // Campo para el código del producto
     nombre: "",
-    precio: "",
     descripcion: "",
     id_categoria: "",
     foto: "", // Solo manejamos una imagen
   });
 
-  const { codigo, nombre, precio, descripcion, id_categoria, foto } = formData;
+  const { codigo, nombre, descripcion, id_categoria, foto } = formData;
 
   // Cargar los datos si estamos en edición
   useEffect(() => {
@@ -28,7 +27,6 @@ const ProductoModal = ({
       setFormData({
         codigo: selectedProduct.codigo || "",
         nombre: selectedProduct.nombre || "",
-        precio: selectedProduct.precio || "",
         descripcion: selectedProduct.descripcion || "",
         id_categoria: selectedProduct.categoria?.id || "", 
         foto: selectedProduct.foto || "", // Cargar la URL de la foto si existe
@@ -37,7 +35,6 @@ const ProductoModal = ({
       setFormData({
         codigo: "",
         nombre: "",
-        precio: "",
         descripcion: "",
         id_categoria: "",
         foto: "",
@@ -127,23 +124,6 @@ const ProductoModal = ({
               onChange={onChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Nombre del producto"
-              required
-            />
-          </div>
-
-          {/* Campo para el precio */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Precio
-            </label>
-            <input
-              type="number"
-              name="precio"
-              value={precio}
-              onChange={onChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Precio"
-              step="0.01"
               required
             />
           </div>

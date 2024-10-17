@@ -14,13 +14,13 @@ const CategoriaModal = ({ open, onClose, selectedCategoria, onSave, isEditing })
         nombre: selectedCategoria.nombre || "",
         descripcion: selectedCategoria.descripcion || "",
       });
-    } else {
+    } else if (!isEditing) {
       setFormData({
         nombre: "",
         descripcion: "",
       });
     }
-  }, [isEditing, selectedCategoria]);
+  }, [isEditing, selectedCategoria, open]);
 
   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 

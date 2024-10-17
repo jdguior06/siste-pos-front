@@ -10,6 +10,7 @@ import ProductosPage from "./pages/ProductosPage";
 import CategoriasPage from "./pages/CategoriasPage";
 import ClientesPage from "./pages/ClientesPage";
 import ProveedoresPage from "./pages/ProveedoresPage";
+import SucursalesPage from "./pages/SucursalesPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./layouts/Dashboard";
@@ -40,6 +41,7 @@ function App() {
             <Route path="/proveedores" element={<ProveedoresPage />} />
             <Route path="/productos" element={<ProductosPage />} />
             <Route path="/categorias" element={<CategoriasPage />} />
+            <Route path="/sucursales" element={<SucursalesPage />} />
             {/* <Route path="/products" element={<Products />} /> */}
             {/* Agrega más rutas según sea necesario */}
           </Route>

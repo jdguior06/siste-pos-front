@@ -4,6 +4,7 @@ import clienteReducer from './reducers/clienteSlice';
 import proveedorReducer from './reducers/proveedorSlice';
 import productoReducer from './reducers/productoSlice';
 import categoriaReducer from './reducers/categoriaSlice';
+import sucursalReducer from './reducers/sucursalSlice'
 import { setAuthInterceptor } from './utils/api';
 
 const tokenFromLocalStorage = localStorage.getItem('token');
@@ -25,6 +26,7 @@ export const store = configureStore({
     proveedores: proveedorReducer,
     productos: productoReducer,
     categorias: categoriaReducer,
+    sucursales:sucursalReducer,
   },
   preloadedState,
 });

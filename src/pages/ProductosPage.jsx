@@ -152,6 +152,9 @@ const ProductosPage = () => {
                   Descripción
                 </th>
                 <th className="border-b border-gray-300 py-3 px-4 text-left">
+                  Costo
+                </th>
+                <th className="border-b border-gray-300 py-3 px-4 text-left">
                   Precio
                 </th>
                 <th className="border-b border-gray-300 py-3 px-4 text-left">
@@ -190,7 +193,10 @@ const ProductosPage = () => {
                     {producto.descripcion || "Sin descripción"}
                   </td>
                   <td className="border-b border-gray-200 py-3 px-4">
-                    {producto.precio || "0.00"}
+                    {producto.precioCompra || "0.00"}
+                  </td>
+                  <td className="border-b border-gray-200 py-3 px-4">
+                    {producto.precioVenta || "0.00"}
                   </td>
                   <td className="border-b border-gray-200 py-3 px-4">
                     {producto.categoria?.nombre || "Sin categoría"}

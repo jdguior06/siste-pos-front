@@ -28,7 +28,7 @@ const ClienteModal = ({ open, onClose, selectedClient, onSave, isEditing }) => {
         nit: "",
       });
     }
-  }, [isEditing, selectedClient]);
+  }, [isEditing, selectedClient, open]);
 
   // Manejador para actualizar el estado del formulario en cada cambio de input
   const onChange = (e) => {

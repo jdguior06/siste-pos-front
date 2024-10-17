@@ -32,6 +32,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <Link to="/sales" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-red-600 hover:shadow-lg">
           <ShoppingCartIcon className="w-5 h-5 inline mr-2" /> Ventas
         </Link>
+        <Link to="/sucursales" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-red-600 hover:shadow-lg">
+          <CubeIcon className="w-5 h-5 inline mr-2" /> Sucursales
+        </Link>
         <Link to="/productos" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-red-600 hover:shadow-lg">
           <CubeIcon className="w-5 h-5 inline mr-2" /> Productos
         </Link>
