@@ -11,6 +11,7 @@ import CategoriasPage from "./pages/CategoriasPage";
 import ClientesPage from "./pages/ClientesPage";
 import ProveedoresPage from "./pages/ProveedoresPage";
 import SucursalesPage from "./pages/SucursalesPage";
+import CajasPage from "./pages/CajasPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./layouts/Dashboard";
@@ -38,10 +39,12 @@ function App() {
           <Route element={<Dashboard />}>
             <Route path="/dashboard" element={<Home />} />
             <Route path="/clientes" element={<ClientesPage />} />
+            <Route path="/cajas" element={<CajasPage />} />
             <Route path="/proveedores" element={<ProveedoresPage />} />
             <Route path="/productos" element={<ProductosPage />} />
             <Route path="/categorias" element={<CategoriasPage />} />
             <Route path="/sucursales" element={<SucursalesPage />} />
+           
             {/* <Route path="/products" element={<Products />} /> */}
             {/* Agrega más rutas según sea necesario */}
           </Route>
