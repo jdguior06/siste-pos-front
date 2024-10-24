@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSucursales, addSucursal, updateSucursal, deleteSucursal } from "../reducers/sucursalSlice";
 import SucursalModal from "../components/SucursalModal";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"; 
+import { PencilSquareIcon, TrashIcon, BuildingStorefrontIcon } from "@heroicons/react/24/outline"; 
+import { useNavigate } from "react-router-dom";
 
-const SucursalesPage = () => {
+const SucursalesPage = ({ setSelectedSucursal }) => {  // Añadimos setSelectedSucursal como prop
   const dispatch = useDispatch();
   const { sucursales, loading, error } = useSelector((state) => state.sucursales);
+  const navigate = useNavigate();
 
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedSucursal, setSelectedSucursal] = useState(null);
+  const [selectedSucursalLocal, setSelectedSucursalLocal] = useState(null);  // Estado local para el modal
   const [searchTerm, setSearchTerm] = useState("");
   const [showInactive, setShowInactive] = useState(false);
 
@@ -19,7 +21,7 @@ const SucursalesPage = () => {
   }, [dispatch]);
 
   const handleOpenModal = (sucursal = null) => {
-    setSelectedSucursal(sucursal);
+    setSelectedSucursalLocal(sucursal);
     setIsEditing(!!sucursal);
     setOpenModal(true);
   };
@@ -39,7 +41,6 @@ const SucursalesPage = () => {
     dispatch(fetchSucursales());
   };
 
-  // Filtrar sucursales por búsqueda y estado activo/inactivo
   const filteredSucursales = sucursales.filter(
     (sucursal) =>
       (showInactive || sucursal.activo) &&
@@ -50,12 +51,20 @@ const SucursalesPage = () => {
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  // Función para gestionar la selección de la sucursal y redirigir al panel
+  const handleSelectSucursal = (sucursal) => {
+    console.log('Sucursal seleccionada:', sucursal);
+    setSelectedSucursal(sucursal);  // Actualizamos la sucursal seleccionada globalmente
+    console.log('Redirigiendo a:', `/sucursales/${sucursal.id}/panel`);
+    navigate(`/sucursales/${sucursal.id}/panel`);  // Redirigimos al panel de la sucursal
+  };
+
   return (
     <>
       <SucursalModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        selectedSucursal={selectedSucursal}
+        selectedSucursal={selectedSucursalLocal}
         onSave={handleSave}
         isEditing={isEditing}
       />
@@ -107,14 +116,24 @@ const SucursalesPage = () => {
                   onClick={() => handleOpenModal(sucursal)}
                 >
                   <PencilSquareIcon className="h-5 w-5 mr-1" />
-                  Editar
+                  
                 </button>
+
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
                   onClick={() => handleDelete(sucursal.id)}
                 >
                   <TrashIcon className="h-5 w-5 mr-1" />
-                  Eliminar
+                  
+                </button>
+
+                {/* Botón para seleccionar la sucursal y mostrar las opciones de administración */}
+                <button
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
+                  onClick={() => handleSelectSucursal(sucursal)}  // Aquí seleccionamos la sucursal
+                >
+                  <BuildingStorefrontIcon className="h-5 w-5 mr-1" />
+                  Seleccionar
                 </button>
               </div>
             </div>

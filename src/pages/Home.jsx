@@ -1,6 +1,5 @@
 // src/pages/Home.jsx
 import React from "react";
-import Dashboard from "../layouts/Dashboard";
 
 const Home = () => {
   return (

@@ -12,24 +12,35 @@ const ProductoModal = ({
   categorias,
 }) => {
   const [formData, setFormData] = useState({
-    codigo: "", // Campo para el código del producto
+    codigo: "", 
     nombre: "",
     descripcion: "",
     id_categoria: "",
-    foto: "", // Solo manejamos una imagen
+    foto: "",
+    precioCompra: "", // Agregar precio de compra
+    precioVenta: "", // Agregar precio de venta
   });
 
-  const { codigo, nombre, descripcion, id_categoria, foto } = formData;
+  const {
+    codigo,
+    nombre,
+    descripcion,
+    id_categoria,
+    foto,
+    precioCompra,
+    precioVenta,
+  } = formData;
 
-  // Cargar los datos si estamos en edición
   useEffect(() => {
     if (isEditing && selectedProduct) {
       setFormData({
         codigo: selectedProduct.codigo || "",
         nombre: selectedProduct.nombre || "",
         descripcion: selectedProduct.descripcion || "",
-        id_categoria: selectedProduct.categoria?.id || "", 
-        foto: selectedProduct.foto || "", // Cargar la URL de la foto si existe
+        id_categoria: selectedProduct.categoria?.id || "",
+        foto: selectedProduct.foto || "",
+        precioCompra: selectedProduct.precioCompra || "", // Cargar precio de compra
+        precioVenta: selectedProduct.precioVenta || "", // Cargar precio de venta
       });
     } else {
       setFormData({
@@ -38,18 +49,18 @@ const ProductoModal = ({
         descripcion: "",
         id_categoria: "",
         foto: "",
+        precioCompra: "", // Resetear precio de compra
+        precioVenta: "", // Resetear precio de venta
       });
     }
   }, [isEditing, selectedProduct]);
 
-  // Manejar cambios en los inputs
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Subir imagen a Cloudinary
   const handleDrop = async (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0]; // Subir una sola imagen
+      const file = acceptedFiles[0];
       const formDataImage = new FormData();
       formDataImage.append("file", file);
       formDataImage.append("upload_preset", "ecommerce_si");
@@ -62,7 +73,7 @@ const ProductoModal = ({
         const data = await response.json();
         setFormData((prevFormData) => ({
           ...prevFormData,
-          foto: data.secure_url, // Guardar la URL de la imagen
+          foto: data.secure_url,
         }));
       } catch (error) {
         console.error("Error al subir la imagen:", error);
@@ -70,28 +81,26 @@ const ProductoModal = ({
     }
   };
 
-  // Configurar Dropzone para manejar la subida de imágenes
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/jpeg": [".jpeg", ".jpg"],
       "image/png": [".png"],
       "image/gif": [".gif"],
     },
-    multiple: false, // Solo una imagen permitida
-    onDrop: handleDrop, // Llamar a la función handleDrop
+    multiple: false,
+    onDrop: handleDrop,
   });
 
-  // Manejar la suma de los datos del producto
   const onSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...formData, id: selectedProduct?.id }); // Enviar los datos
+    onSave({ ...formData, id: selectedProduct?.id });
   };
 
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto"> {/* Ajustar alto máximo y agregar scroll si es necesario */}
+      <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto">
         <h3 className="text-2xl mb-4">
           {isEditing ? "Editar Producto" : "Crear Producto"}
         </h3>
@@ -143,7 +152,7 @@ const ProductoModal = ({
             />
           </div>
 
-          {/* Selección de categoría */}
+          {/* Campo para la categoría */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Categoría
@@ -166,6 +175,38 @@ const ProductoModal = ({
                 <option disabled>No hay categorías disponibles</option>
               )}
             </select>
+          </div>
+
+          {/* Campo para el precio de compra */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Costo
+            </label>
+            <input
+              type="number"
+              name="precioCompra"
+              value={precioCompra}
+              onChange={onChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Costo del producto"
+              required
+            />
+          </div>
+
+          {/* Campo para el precio de venta */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Precio de venta
+            </label>
+            <input
+              type="number"
+              name="precioVenta"
+              value={precioVenta}
+              onChange={onChange}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Precio de venta del producto"
+              required
+            />
           </div>
 
           {/* Campo para subir imagen */}

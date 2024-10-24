@@ -1,9 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, Outlet } from 'react-router-dom';
+import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const { isAuthenticated } = useSelector(state => state.auth); // Verifica si el usuario está autenticado
+  const { isAuthenticated } = useSelector((state) => state.auth); // Verifica si el usuario está autenticado
 
   if (!isAuthenticated) {
     // Si no está autenticado, redirige al login
