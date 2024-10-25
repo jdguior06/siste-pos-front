@@ -1,29 +1,24 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => {
+
+const CajaModal = ({ open, onClose, selectedCaja, onSave, isEditing }) => {
   const [formData, setFormData] = useState({
-    numero: "",
-    descripcion: "",
-    activo: true,
+    nombre: "",
   });
 
   // Cargar datos si estamos editando
   useEffect(() => {
-    if (isEditing && selectedAlmacen) {
+    if (isEditing && selectedCaja) {
       setFormData({
-        numero: selectedAlmacen.numero || "",
-        descripcion: selectedAlmacen.descripcion || "",
-        // activo: selectedAlmacen.activo || false,
+        nombre: selectedCaja.nombre || "",
       });
     } else if (!isEditing) {
       setFormData({
-        numero: "",
-        descripcion: "",
-        // activo: true,
+        nombre: "",
       });
     }
-  }, [isEditing, selectedAlmacen, open]);
+  }, [isEditing, selectedCaja, open]);
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,7 +27,7 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
 
   const onSubmit = (e) => {
     e.preventDefault();
-    onSave({ ...formData, id: selectedAlmacen?.id });
+    onSave({ ...formData, id: selectedCaja?.id });
   };
 
   if (!open) return null;
@@ -50,36 +45,16 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Número</label>
+            <label className="block text-sm font-medium text-gray-700">Nombre</label>
             <input
-              type="number"
-              name="numero"
-              value={formData.numero}
+              type="text"
+              name="nombre"
+              value={formData.nombre}
               onChange={onChange}
               className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Descripción</label>
-            <textarea
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={onChange}
-              className="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              required
-            />
-          </div>
-          {/* <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="activo"
-              checked={formData.activo}
-              onChange={onChange}
-              className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-            />
-            <label className="ml-2 block text-sm font-medium text-gray-700">Activo</label>
-          </div> */}
           <div className="flex justify-end space-x-3">
             <button
               type="button"
@@ -98,12 +73,13 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
   );
 };
 
-AlmacenModal.propTypes = {
+CajaModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  selectedAlmacen: PropTypes.object,
+  selectedCaja: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   isEditing: PropTypes.bool.isRequired,
 };
 
-export default AlmacenModal;
+export default CajaModal;
+

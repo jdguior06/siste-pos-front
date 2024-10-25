@@ -90,6 +90,7 @@ const almacenSlice = createSlice({
       .addCase(fetchAlmacenes.fulfilled, (state, action) => {
         state.loading = false;
         state.almacenes = action.payload;
+        console.log("estado de almacenes", state.almacenes)
       })
       .addCase(fetchAlmacenes.rejected, (state, action) => {
         state.loading = false;

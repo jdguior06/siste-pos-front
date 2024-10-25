@@ -12,7 +12,7 @@ const ProductoModal = ({
   categorias,
 }) => {
   const [formData, setFormData] = useState({
-    codigo: "", 
+    codigo: "",
     nombre: "",
     descripcion: "",
     id_categoria: "",
@@ -53,7 +53,7 @@ const ProductoModal = ({
         precioVenta: "", // Resetear precio de venta
       });
     }
-  }, [isEditing, selectedProduct]);
+  }, [isEditing, selectedProduct, open]);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -95,6 +95,12 @@ const ProductoModal = ({
     e.preventDefault();
     onSave({ ...formData, id: selectedProduct?.id });
   };
+
+  function handleBlur(e) {
+    const { name, value } = e.target;
+    const formattedValue = parseFloat(value).toFixed(2); // Formatea a dos decimales
+    onChange({ target: { name, value: formattedValue } });
+  }
 
   if (!open) return null;
 
@@ -187,13 +193,15 @@ const ProductoModal = ({
               name="precioCompra"
               value={precioCompra}
               onChange={onChange}
+              onBlur={handleBlur}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Costo del producto"
+              min="0.00"
+              step="0.01"
               required
             />
           </div>
 
-          {/* Campo para el precio de venta */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Precio de venta
@@ -203,8 +211,11 @@ const ProductoModal = ({
               name="precioVenta"
               value={precioVenta}
               onChange={onChange}
+              onBlur={handleBlur}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Precio de venta del producto"
+              min="0.01"
+              step="0.01"
               required
             />
           </div>

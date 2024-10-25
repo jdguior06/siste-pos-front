@@ -4,7 +4,6 @@ import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
 
 const Dashboard = ({ selectedSucursal }) => {
-  console.log('Sucursal seleccionada en Dashboard:', selectedSucursal);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -27,3 +26,4 @@ const Dashboard = ({ selectedSucursal }) => {
 };
 
 export default Dashboard;
+
