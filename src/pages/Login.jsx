@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";  // Para la redirección
 import { login } from "../services/authServices";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
-import heroLogin from "../assets/heroLogin.jpg";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -96,11 +95,6 @@ const Login = () => {
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </button>
         </form>
-      </div>
-
-      {/* Imagen ajustada */}
-      <div className="lg:w-1/2 w-full h-48 lg:h-full flex items-center">
-        <img src={heroLogin} alt="Hero Login" className="h-full w-full object-cover" />
       </div>
     </div>
   );
