@@ -13,6 +13,7 @@ import ProveedoresPage from "./pages/ProveedoresPage";
 import SucursalesPage from "./pages/SucursalesPage";
 import SucursalPanel from "./pages/SucursalPanel";
 import AlmacenesPage from "./pages/AlmacenesPage";
+import CajasPage from "./pages/CajasPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./layouts/Dashboard";
@@ -54,6 +55,7 @@ function App() {
               {/* Ruta anidada para almacenes */}
               <Route index element={<Navigate to="almacenes" replace/>} />
               <Route path="almacenes" element={<AlmacenesPage />} />
+              <Route path="cajas" element={<CajasPage />} />
             </Route>
             <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
 

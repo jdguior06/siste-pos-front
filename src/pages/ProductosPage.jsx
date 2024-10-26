@@ -139,28 +139,28 @@ const ProductosPage = () => {
           <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
             <thead className="bg-gray-100 text-gray-700">
               <tr>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Código
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Nombre
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Imagen
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Descripción
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Costo
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Precio
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Categoría
                 </th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">
+                <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Acciones
                 </th>
               </tr>
@@ -173,46 +173,48 @@ const ProductosPage = () => {
                     producto.activo ? "bg-white" : "bg-gray-200"
                   } hover:bg-gray-50 transition`}
                 >
-                  <td className="border-b border-gray-200 py-3 px-4">
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
                     {producto.codigo}
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
                     {producto.nombre || "Sin nombre"}
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
+                  <td className="border-b border-gray-200 py-1 px-2">
                     <img
                       src={
                         producto.foto ||
-                        "https://via.placeholder.com/100?text=No+Image"
+                        "https://via.placeholder.com/60?text=No+Image"
                       }
                       alt={producto.nombre}
-                      className="w-20 h-20 object-cover"
+                      className="w-16 h-16 object-cover rounded"
                     />
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
-                    {producto.descripcion || "Sin descripción"}
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
+                    {producto.descripcion
+                      ? producto.descripcion.slice(0, 30) + "..." // Limitar la longitud
+                      : "Sin descripción"}
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
-                    {producto.precioCompra || "0.00"}
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
+                    {producto.precioCompra.toFixed(2) || "0.00"} Bs
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
-                    {producto.precioVenta || "0.00"}
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
+                    {producto.precioVenta.toFixed(2) || "0.00"} Bs
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4">
+                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
                     {producto.categoria?.nombre || "Sin categoría"}
                   </td>
-                  <td className="border-b border-gray-200 py-3 px-4 flex items-center justify-start space-x-2">
+                  <td className="border-b border-gray-200 py-1 px-2 flex items-center justify-start space-x-2">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow-sm"
+                      className="bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
                       onClick={() => handleOpenModal(producto)}
                     >
-                      <PencilSquareIcon className="h-5 w-5" />
+                      <PencilSquareIcon className="h-4 w-4" />
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow-sm"
+                      className="bg-red-500 hover:bg-red-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
                       onClick={() => handleOpenDeleteModal(producto)}
                     >
-                      <TrashIcon className="h-5 w-5" />
+                      <TrashIcon className="h-4 w-4" />
                     </button>
                   </td>
                 </tr>

@@ -14,13 +14,13 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
       setFormData({
         numero: selectedAlmacen.numero || "",
         descripcion: selectedAlmacen.descripcion || "",
-        activo: selectedAlmacen.activo || false,
+        // activo: selectedAlmacen.activo || false,
       });
     } else if (!isEditing) {
       setFormData({
         numero: "",
         descripcion: "",
-        activo: true,
+        // activo: true,
       });
     }
   }, [isEditing, selectedAlmacen, open]);
@@ -70,7 +70,7 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
               required
             />
           </div>
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <input
               type="checkbox"
               name="activo"
@@ -79,7 +79,7 @@ const AlmacenModal = ({ open, onClose, selectedAlmacen, onSave, isEditing }) => 
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
             />
             <label className="ml-2 block text-sm font-medium text-gray-700">Activo</label>
-          </div>
+          </div> */}
           <div className="flex justify-end space-x-3">
             <button
               type="button"
