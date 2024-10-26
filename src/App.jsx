@@ -19,6 +19,7 @@ import Dashboard from "./layouts/Dashboard";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { clearAuth, setAuth } from "./reducers/authSlice";
+import InventarioPage from "./pages/InventarioPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -54,6 +55,8 @@ function App() {
               <Route index element={<Navigate to="almacenes" replace/>} />
               <Route path="almacenes" element={<AlmacenesPage />} />
             </Route>
+            <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
+
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/login" />} />
