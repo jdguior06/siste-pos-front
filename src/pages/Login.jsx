@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";  // Para la redirección
+import { Navigate } from "react-router-dom";
 import { login } from "../services/authServices";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector(state => state.auth); // Accede a isAuthenticated desde Redux
+  const { isAuthenticated, loading } = useSelector(state => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -20,14 +20,12 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Realiza la autenticación con el servicio de login
     const response = await dispatch(login(email, password));
 
-    // Muestra una notificación dependiendo de la respuesta
     if (response.success) {
-      toast.success(response.message);  // Login exitoso
+      toast.success(response.message);
     } else {
-      toast.error(response.message);  // Error en el login
+      toast.error(response.message);
     }
   };
 
@@ -35,19 +33,18 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Si el usuario ya está autenticado, redirigir al dashboard
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-brp-4 bg-gray-900 min-h-screen text-gray-300  via-blue-400 to-blue-600 ">
       <ToastContainer />
 
       {/* Formulario de Login */}
-      <div className="flex flex-col justify-center w-full lg:w-1/2 p-8 bg-white">
-        <h1 className="text-4xl font-bold mb-4 text-center lg:text-left">Iniciar Sesión</h1>
-        <p className="mb-8 text-gray-600 text-center lg:text-left">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <h1 className="text-4xl font-bold mb-4 text-center text-blue-800">Iniciar Sesión</h1>
+        <p className="mb-8 text-gray-600 text-center">
           Maneja tu restaurante como un profesional en el mercado
         </p>
 
@@ -57,7 +54,7 @@ const Login = () => {
               Correo Electrónico
             </label>
             <div className="flex items-center border-b-2 border-gray-300 py-2 focus-within:border-blue-500 transition duration-300">
-              <EnvelopeIcon className="h-6 w-6 text-gray-400" />
+              <EnvelopeIcon className="h-6 w-6 text-blue-500" />
               <input
                 className="w-full py-2 text-gray-700 focus:outline-none focus:ring-0 ml-2"
                 type="email"
@@ -75,7 +72,7 @@ const Login = () => {
               Contraseña
             </label>
             <div className="flex items-center border-b-2 border-gray-300 py-2 focus-within:border-blue-500 transition duration-300">
-              <LockClosedIcon className="h-6 w-6 text-gray-400" />
+              <LockClosedIcon className="h-6 w-6 text-blue-500" />
               <input
                 className="w-full py-2 text-gray-700 focus:outline-none focus:ring-0 ml-2"
                 type="password"

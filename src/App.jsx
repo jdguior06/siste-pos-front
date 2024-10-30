@@ -1,11 +1,8 @@
-import "./App.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate,
-} from "react-router-dom";
+// src/App.jsx
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
+import PlanPage from "./pages/CatalogoPlanes";
 import ProductosPage from "./pages/ProductosPage";
 import CategoriasPage from "./pages/CategoriasPage";
 import ClientesPage from "./pages/ClientesPage";
@@ -17,8 +14,8 @@ import CajasPage from "./pages/CajasPage";
 import Login from "./pages/Login";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./layouts/Dashboard";
+import Navbar1 from "./components/Navbar1"; // Navbar para Home, Login y PlanPage
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 import { clearAuth, setAuth } from "./reducers/authSlice";
 import InventarioPage from "./pages/InventarioPage";
 import NotasEntradaPage from "./pages/NotasEntradaPage";
@@ -36,10 +33,18 @@ function App() {
     }
   }, [dispatch]);
 
+
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        {/* Rutas donde se muestra Navbar1 */}
+        <Route element={<NavbarLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/planes" element={<PlanPage />} />
+        </Route>
+
+        {/* Otras rutas con el Navbar diferente o sin Navbar */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Dashboard selectedSucursal={selectedSucursal} />}>
             <Route path="/dashboard" element={<Home />} />
@@ -47,15 +52,9 @@ function App() {
             <Route path="/proveedores" element={<ProveedoresPage />} />
             <Route path="/productos" element={<ProductosPage />} />
             <Route path="/categorias" element={<CategoriasPage />} />
-            <Route 
-              path="/sucursales" 
-              element={<SucursalesPage setSelectedSucursal={setSelectedSucursal} />} 
-            />
-
-            {/* Ruta de panel para cada sucursal */}
+            <Route path="/sucursales" element={<SucursalesPage setSelectedSucursal={setSelectedSucursal} />} />
             <Route path="/sucursales/:id/panel" element={<SucursalPanel selectedSucursal={selectedSucursal} />}>
-              {/* Ruta anidada para almacenes */}
-              <Route index element={<Navigate to="almacenes" replace/>} />
+              <Route index element={<Navigate to="almacenes" replace />} />
               <Route path="almacenes" element={<AlmacenesPage />} />
               <Route path="cajas" element={<CajasPage />} />
               {/* Ruta de inventario y notas de entrada dentro del almacén seleccionado */}
@@ -67,7 +66,9 @@ function App() {
              
           </Route>
         </Route>
-        <Route path="*" element={<Navigate to="/login" />} />
+
+        {/* Ruta para cualquier otro acceso a rutas inválidas */}
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </Router>
   );

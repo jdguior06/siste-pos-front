@@ -26,13 +26,17 @@ const SucursalPanel = ({ selectedSucursal }) => {
         <h2 className="text-3xl font-bold">
           Panel de Administración - {selectedSucursal.nombre}
         </h2>
-        <button
-          onClick={() => navigate('/sucursales')}
-          className="bg-blue-500 hover:bg-blue-600 text-white flex items-center py-2 px-4 rounded-lg shadow-md transition-transform hover:scale-105"
-        >
-          <ArrowLeftIcon className="h-5 w-5 mr-2" />
-          Volver a Sucursales
-        </button>
+          <button
+              onClick={() => {
+              navigate('/sucursales');
+              window.location.reload(); // Recarga la página después de navegar
+              }
+            }
+              className="bg-blue-500 hover:bg-blue-600 text-white flex items-center py-2 px-4 rounded-lg shadow-md transition-transform hover:scale-105"
+          >
+            <ArrowLeftIcon className="h-5 w-5 mr-2" />
+            Volver a Sucursales
+          </button>
       </div>
 
       <div className="flex space-x-2 mb-3">
