@@ -1,6 +1,7 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { login } from "../services/authServices";
 import { EnvelopeIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,7 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated, loading } = useSelector(state => state.auth);
+  const navigate = useNavigate();
+  const { isAuthenticated, loading } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -19,7 +21,6 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
     const response = await dispatch(login(email, password));
 
     if (response.success) {
@@ -33,15 +34,14 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Redirigir al dashboard si el usuario ya está autenticado
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gradient-to-brp-4 bg-gray-900 min-h-screen text-gray-300  via-blue-400 to-blue-600 ">
+    <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600">
       <ToastContainer />
-
-      {/* Formulario de Login */}
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold mb-4 text-center text-blue-800">Iniciar Sesión</h1>
         <p className="mb-8 text-gray-600 text-center">
@@ -92,6 +92,16 @@ const Login = () => {
             {loading ? "Cargando..." : "Iniciar Sesión"}
           </button>
         </form>
+
+        {/* Link de registro */}
+        <div className="mt-6 text-center">
+          <label
+            onClick={() => navigate("/registro")}
+            className="text-blue-500 cursor-pointer hover:underline"
+          >
+            ¿No tienes cuenta? Regístrate aquí
+          </label>
+        </div>
       </div>
     </div>
   );

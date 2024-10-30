@@ -1,8 +1,10 @@
 // src/pages/CatalogoPlanes.jsx
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchPlanes } from "../services/planServices";
 
 const CatalogoPlanes = () => {
+  const navigate = useNavigate();
   const [planes, setPlanes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState("mes");
@@ -34,10 +36,8 @@ const CatalogoPlanes = () => {
 
   return (
     <div className="p-4 bg-gray-900 min-h-screen text-gray-300">
-      {/* Título centrado */}
       <h2 className="text-3xl font-bold mb-4 text-center text-gray-100">Planes de Suscripción</h2>
-
-      {/* Switch para seleccionar el tipo de plan */}
+      
       <div className="flex justify-center items-center mb-6 space-x-2">
         <span className={`${selectedType === "año" ? "text-gray-100 font-semibold" : "text-gray-400"}`}>Anual</span>
         <div
@@ -58,7 +58,6 @@ const CatalogoPlanes = () => {
         <span className={`${selectedType === "mes" ? "text-gray-100 font-semibold" : "text-gray-400"}`}>Mensual</span>
       </div>
 
-      {/* Lista de planes filtrados */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredPlanes.map((plan) => (
           <div key={plan.id} className="bg-gray-800 p-6 rounded-lg shadow-md">
@@ -67,6 +66,14 @@ const CatalogoPlanes = () => {
             <p className="text-gray-300 mt-2">Costo: ${plan.costo}</p>
             <p className="text-gray-300">Usuarios permitidos: {plan.limite_usuarios}</p>
             <p className="text-gray-300">Sucursales permitidas: {plan.limite_sucursales}</p>
+            
+            {/* Botón para seleccionar el plan y redirigir a registro */}
+            <button
+              onClick={() => navigate("/registro", { state: { plan: plan.nombre } })}
+              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+            >
+              Seleccionar este plan
+            </button>
           </div>
         ))}
       </div>
