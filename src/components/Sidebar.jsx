@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   XMarkIcon,
@@ -23,6 +24,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
   const location = useLocation();
 
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isAlmacenesOpen, setIsAlmacenesOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -30,13 +32,18 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
     navigate("/login");
   };
 
+  // Verifica si selectedSucursal no es null o undefined antes de intentar acceder a su id
+  const isInsideAlmacen = selectedSucursal &&
+    location.pathname.includes(`/sucursales/${selectedSucursal.id}/panel/almacenes`) &&
+    location.pathname.split("/").length > 5;
+
   return (
     <div
       className={`flex flex-col bg-gray-900 text-white w-64 py-6 px-3 absolute inset-y-0 left-0 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } lg:relative lg:translate-x-0 transition duration-300 ease-in-out shadow-lg border-r border-gray-700`}
     >
-      {/* Botón para cerrar el sidebar en pantallas pequeñas */}
+       {/* Botón para cerrar el sidebar en pantallas pequeñas */}
       <button
         onClick={toggleSidebar}
         className="absolute top-2 right-2 lg:hidden"
@@ -72,14 +79,46 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               </h2>
             </div>
 
-            <Link
-              to={`/sucursales/${selectedSucursal.id}/panel/almacenes`}
-              className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
-                location.pathname.includes("/almacenes") ? "bg-red-700" : ""
-              }`}
-            >
-              <CubeIcon className="w-5 h-5 mr-2" /> Almacenes
-            </Link>
+            {/* Opción para Almacenes */}
+            <div>
+              <button
+                className="w-full flex items-center text-left py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600"
+                onClick={() => setIsAlmacenesOpen(!isAlmacenesOpen)}
+              >
+                <CubeIcon className="w-5 h-5 mr-2" /> Almacenes
+                {isAlmacenesOpen ? (
+                  <ChevronUpIcon className="w-5 h-5 ml-auto" />
+                ) : (
+                  <ChevronDownIcon className="w-5 h-5 ml-auto" />
+                )}
+              </button>
+              {isAlmacenesOpen && (
+                <div className="pl-6 space-y-1">
+                  <Link
+                    to={`/sucursales/${selectedSucursal.id}/panel/almacenes`}
+                    className={`block py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+                      location.pathname.includes("/panel/almacenes") &&
+                      !location.pathname.includes("/notas-entrada")
+                        ? "bg-red-700"
+                        : ""
+                    }`}
+                  >
+                    Gestionar Almacenes
+                  </Link>
+                  {isInsideAlmacen && (
+                    <Link
+                      to={`/sucursales/${selectedSucursal.id}/panel/almacenes/${selectedSucursal.id}/notas-entrada`}
+                      className={`block py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+                        location.pathname.includes("/notas-entrada") ? "bg-red-700" : ""
+                      }`}
+                    >
+                      Notas de compras
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
             <Link
               to={`/sucursales/${selectedSucursal.id}/panel/cajas`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${

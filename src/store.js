@@ -7,6 +7,8 @@ import categoriaReducer from './reducers/categoriaSlice';
 import sucursalReducer from './reducers/sucursalSlice'
 import almacenReducer from './reducers/almacenSlice'
 import cajaReducer from './reducers/cajaSlice'
+import productAlmacenReducer from './reducers/productAlmacenSlice';
+import notaEntradaReducer from './reducers/notaEntradaSlice';
 import { setAuthInterceptor } from './utils/api';
 
 const tokenFromLocalStorage = localStorage.getItem('token');
@@ -31,6 +33,8 @@ export const store = configureStore({
     sucursales: sucursalReducer,
     almacenes: almacenReducer,
     cajas: cajaReducer,
+    productAlmacenes: productAlmacenReducer,
+    notasEntrada: notaEntradaReducer
   },
   preloadedState,
 });
