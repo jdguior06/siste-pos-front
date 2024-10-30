@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://107.20.164.132:8080/pos',
+  baseURL: 'http://localhost:8080/pos',
 });
 
 export const setAuthInterceptor = (store) => {

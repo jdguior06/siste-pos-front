@@ -40,7 +40,7 @@ const CajaModal = ({ open, onClose, selectedCaja, onSave, isEditing }) => {
         </p>
         <div className="mb-6 text-center">
           <h3 className="text-xl font-semibold text-gray-800">
-            {isEditing ? "Editar Almacén" : "Crear Almacén"}
+            {isEditing ? "Editar caja" : "Crear caja"}
           </h3>
         </div>
         <form onSubmit={onSubmit} className="space-y-4">
