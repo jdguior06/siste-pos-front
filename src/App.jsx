@@ -12,12 +12,16 @@ import SucursalPanel from "./pages/SucursalPanel";
 import AlmacenesPage from "./pages/AlmacenesPage";
 import CajasPage from "./pages/CajasPage";
 import Login from "./pages/Login";
-import Registro from "./pages/Registro";  // Importar la página de Registro
+import Registro from "./pages/Registro";
+import ConfiguracionForm from "./pages/ConfiguracionForm";
+import BackupForm from "./pages/BackupForm";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Dashboard from "./layouts/Dashboard";
-import Navbar1 from "./components/Navbar1";  // Navbar para Home, Login y PlanPage
+import Navbar1 from "./components/Navbar1";
 import { useDispatch } from "react-redux";
 import { clearAuth, setAuth } from "./reducers/authSlice";
+import InventarioPage from "./pages/InventarioPage";
+import NotasEntradaPage from "./pages/NotasEntradaPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,10 +54,10 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/planes" element={<PlanPage />} />
-          <Route path="/registro" element={<Registro />} /> {/* Nueva ruta de Registro */}
+          <Route path="/registro" element={<Registro />} />
         </Route>
 
-        {/* Otras rutas con el Navbar diferente o sin Navbar */}
+        {/* Otras rutas protegidas con el Navbar diferente o sin Navbar */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Dashboard selectedSucursal={selectedSucursal} />}>
             <Route path="/dashboard" element={<Home />} />
@@ -66,7 +70,12 @@ function App() {
               <Route index element={<Navigate to="almacenes" replace />} />
               <Route path="almacenes" element={<AlmacenesPage />} />
               <Route path="cajas" element={<CajasPage />} />
+              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
+              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
             </Route>
+            {/* Ruta directa para configuración y backup */}
+            <Route path="/settings" element={<ConfiguracionForm />} />
+            <Route path="/backup" element={<BackupForm />} />
           </Route>
         </Route>
 

@@ -1,4 +1,4 @@
-
+// src/components/Sidebar.jsx
 import React, { useState } from "react";
 import {
   XMarkIcon,
@@ -206,6 +206,8 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
         >
           <TruckIcon className="w-5 h-5 mr-2" /> Proveedores
         </Link>
+        
+        {/* Sección de Configuración y Backup */}
         <Link
           to="/settings"
           className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
@@ -214,6 +216,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
         >
           <CogIcon className="w-5 h-5 mr-2" /> Configuración
         </Link>
+        {/* Añadimos el botón de descarga de backup */}
       </nav>
 
       {/* Botón para cerrar sesión al final */}
