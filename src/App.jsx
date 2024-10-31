@@ -18,8 +18,8 @@ import Dashboard from "./layouts/Dashboard";
 import Navbar1 from "./components/Navbar1";  // Navbar para Home, Login y PlanPage
 import { useDispatch } from "react-redux";
 import { clearAuth, setAuth } from "./reducers/authSlice";
-
-
+import InventarioPage from "./pages/InventarioPage";
+import NotasEntradaPage from "./pages/NotasEntradaPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -68,6 +68,10 @@ function App() {
               <Route index element={<Navigate to="almacenes" replace />} />
               <Route path="almacenes" element={<AlmacenesPage />} />
               <Route path="cajas" element={<CajasPage />} />
+              {/* Ruta de inventario y notas de entrada dentro del almacén seleccionado */}
+              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
+              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
+
             </Route>
           </Route>
         </Route>
