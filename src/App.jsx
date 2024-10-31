@@ -19,6 +19,8 @@ import Navbar1 from "./components/Navbar1";  // Navbar para Home, Login y PlanPa
 import { useDispatch } from "react-redux";
 import { clearAuth, setAuth } from "./reducers/authSlice";
 
+
+
 function App() {
   const dispatch = useDispatch();
   const [selectedSucursal, setSelectedSucursal] = useState(null);
