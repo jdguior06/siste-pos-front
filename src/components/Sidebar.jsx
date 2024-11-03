@@ -136,7 +136,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               <ShoppingCartIcon className="w-5 h-5 mr-2" /> Ventas
             </Link>
             <Link
-              to={`/sucursales/${selectedSucursal.id}/reportes`}
+              to={`/reportes`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
                 location.pathname.includes("/reportes") ? "bg-red-700" : ""
               }`}

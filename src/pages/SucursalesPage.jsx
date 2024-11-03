@@ -53,7 +53,7 @@ const SucursalesPage = ({ setSelectedSucursal }) => {  // Añadimos setSelectedS
 
   // Función para gestionar la selección de la sucursal y redirigir al panel
   const handleSelectSucursal = (sucursal) => {
-    console.log('Sucursal seleccionada:', sucursal);
+    
     setSelectedSucursal(sucursal);  // Actualizamos la sucursal seleccionada globalmente
     console.log('Redirigiendo a:', `/sucursales/${sucursal.id}/panel`);
     navigate(`/sucursales/${sucursal.id}/panel`);  // Redirigimos al panel de la sucursal
