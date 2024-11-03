@@ -5,7 +5,20 @@ import {
   addAlmacenApi,
   updateAlmacenApi,
   deleteAlmacenApi,
+  fetchAllAlmacenesApi,
 } from '../services/almacenServices';
+
+export const fetchAllAlmacenes = createAsyncThunk(
+  'almacenes/fetchAllAlmacenes',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchAllAlmacenesApi(); // Llama al servicio para obtener todos los almacenes
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 // Obtener todos los almacenes de una sucursal
 export const fetchAlmacenes = createAsyncThunk(
@@ -83,6 +96,19 @@ const almacenSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    //fetch all almacenes
+    .addCase(fetchAllAlmacenes.pending, (state) => {
+      state.loading = true;
+    })
+    .addCase(fetchAllAlmacenes.fulfilled, (state, action) => {
+      state.loading = false;
+      state.almacenes = action.payload; // Almacena todos los almacenes obtenidos
+      console.log("Todos los almacenes cargados:", state.almacenes);
+    })
+    .addCase(fetchAllAlmacenes.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
       // Fetch almacenes
       .addCase(fetchAlmacenes.pending, (state) => {
         state.loading = true;
