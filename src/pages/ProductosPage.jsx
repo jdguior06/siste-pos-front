@@ -10,6 +10,8 @@ import { fetchCategorias } from "../reducers/categoriaSlice";
 import ProductoModal from "../components/ProductoModal";
 import ProductoDeleteModal from "../components/ProductoDeleteModal";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import PermissionWrapper from "../components/PermissionWrapper";
+import ThemedButton from "../components/ThemedButton";
 
 const ProductosPage = () => {
   const dispatch = useDispatch();
@@ -112,12 +114,11 @@ const ProductosPage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg shadow-sm transition transform hover:scale-105"
-            onClick={() => handleOpenModal()}
-          >
-            Crear Producto
-          </button>
+          <PermissionWrapper permission="PERMISO_ADMINISTRAR_PRODUCTOS">
+            <ThemedButton variant="primary" onClick={() => handleOpenModal()}>
+              Crear Producto
+            </ThemedButton>
+          </PermissionWrapper>
 
           {/* Checkbox para mostrar inactivos */}
           <div className="flex items-center ml-4">
@@ -151,18 +152,22 @@ const ProductosPage = () => {
                 <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Descripción
                 </th>
-                <th className="border-b border-gray-300 py-2 px-3 text-left">
-                  Costo
-                </th>
+                <PermissionWrapper permission="PERMISO_ADMINISTRAR_PRODUCTOS">
+                  <th className="border-b border-gray-300 py-2 px-3 text-left">
+                    Costo
+                  </th>
+                </PermissionWrapper>
                 <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Precio
                 </th>
                 <th className="border-b border-gray-300 py-2 px-3 text-left">
                   Categoría
                 </th>
-                <th className="border-b border-gray-300 py-2 px-3 text-left">
-                  Acciones
-                </th>
+                <PermissionWrapper permission="PERMISO_ADMINISTRAR_PRODUCTOS">
+                  <th className="border-b border-gray-300 py-2 px-3 text-left">
+                    Acciones
+                  </th>
+                </PermissionWrapper>
               </tr>
             </thead>
             <tbody>
@@ -194,29 +199,33 @@ const ProductosPage = () => {
                       ? producto.descripcion.slice(0, 30) + "..." // Limitar la longitud
                       : "Sin descripción"}
                   </td>
-                  <td className="border-b border-gray-200 py-1 px-2 text-sm">
-                    {producto.precioCompra.toFixed(2) || "0.00"} Bs
-                  </td>
+                  <PermissionWrapper permission="PERMISO_ADMINISTRAR_PRODUCTOS">
+                    <td className="border-b border-gray-200 py-1 px-2 text-sm">
+                      {producto.precioCompra.toFixed(2) || "0.00"} Bs
+                    </td>
+                  </PermissionWrapper>
                   <td className="border-b border-gray-200 py-1 px-2 text-sm">
                     {producto.precioVenta.toFixed(2) || "0.00"} Bs
                   </td>
                   <td className="border-b border-gray-200 py-1 px-2 text-sm">
                     {producto.categoria?.nombre || "Sin categoría"}
                   </td>
-                  <td className="border-b border-gray-200 py-1 px-2 flex items-center justify-start space-x-2">
-                    <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
-                      onClick={() => handleOpenModal(producto)}
-                    >
-                      <PencilSquareIcon className="h-4 w-4" />
-                    </button>
-                    <button
-                      className="bg-red-500 hover:bg-red-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
-                      onClick={() => handleOpenDeleteModal(producto)}
-                    >
-                      <TrashIcon className="h-4 w-4" />
-                    </button>
-                  </td>
+                  <PermissionWrapper permission="PERMISO_ADMINISTRAR_PRODUCTOS">
+                    <td className="border-b border-gray-200 py-1 px-2 flex items-center justify-start space-x-2">
+                      <button
+                        className="bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
+                        onClick={() => handleOpenModal(producto)}
+                      >
+                        <PencilSquareIcon className="h-4 w-4" />
+                      </button>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white flex items-center justify-center w-8 h-8 rounded-full shadow-sm"
+                        onClick={() => handleOpenDeleteModal(producto)}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </PermissionWrapper>
                 </tr>
               ))}
             </tbody>

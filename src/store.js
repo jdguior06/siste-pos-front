@@ -4,22 +4,25 @@ import clienteReducer from './reducers/clienteSlice';
 import proveedorReducer from './reducers/proveedorSlice';
 import productoReducer from './reducers/productoSlice';
 import categoriaReducer from './reducers/categoriaSlice';
-import sucursalReducer from './reducers/sucursalSlice'
-import almacenReducer from './reducers/almacenSlice'
-import cajaReducer from './reducers/cajaSlice'
+import sucursalReducer from './reducers/sucursalSlice';
+import almacenReducer from './reducers/almacenSlice';
+import cajaReducer from './reducers/cajaSlice';
+import permisoReducer from './reducers/permisoSlice';
+import rolReducer from './reducers/rolSlice';
+import usuarioReducer from './reducers/usuarioSlice';
 import { setAuthInterceptor } from './utils/api';
 
-const tokenFromLocalStorage = localStorage.getItem('token');
+const authData = JSON.parse(localStorage.getItem('auth'));
 
 const preloadedState = {
   auth: {
-    token: tokenFromLocalStorage || null,
-    isAuthenticated: !!tokenFromLocalStorage,
-    user: null,  // Puedes hacer una petición para cargar datos del usuario si es necesario
-    loading: false
-  }
+    token: authData?.token || null,
+    isAuthenticated: !!authData?.token,
+    user: authData?.user || null,
+    permisos: authData?.permisos || [],
+    loading: false,
+  },
 };
-
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +34,9 @@ export const store = configureStore({
     sucursales: sucursalReducer,
     almacenes: almacenReducer,
     cajas: cajaReducer,
+    permisos: permisoReducer,
+    roles: rolReducer,
+    usuarios : usuarioReducer,
   },
   preloadedState,
 });

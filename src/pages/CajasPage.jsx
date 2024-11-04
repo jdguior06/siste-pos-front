@@ -9,11 +9,12 @@ import {
 } from "../reducers/cajaSlice";
 import CajaModal from "../components/CajaModal";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useTheme } from "../context/ThemeContext"; // Importa useTheme para obtener los colores del tema
 
 const CajasPage = () => {
-  console.log("Cargando cajas...");
   const dispatch = useDispatch();
   const { id } = useParams();
+  const { theme } = useTheme(); // Extrae el tema actual
 
   const { cajas = [], loading, error } = useSelector((state) => state.cajas);
 
@@ -50,7 +51,7 @@ const CajasPage = () => {
     dispatch(fetchCajas(id));
   };
 
-  // Filtrar cajas (asegurándonos de que cajas esté definido)
+  // Filtrar cajas
   const filteredCajas = (cajas || []).filter(
     (caja) =>
       (showInactive || caja.activo) &&
@@ -64,8 +65,8 @@ const CajasPage = () => {
     currentPage * itemsPerPage
   );
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div style={{ color: theme.textColor }}>Cargando...</div>;
+  if (error) return <div style={{ color: theme.textColor }}>Error: {error}</div>;
 
   return (
     <>
@@ -77,21 +78,30 @@ const CajasPage = () => {
         isEditing={isEditing}
       />
 
-      <div className="container mx-auto p-6">
-        <h2 className="text-3xl font-bold mb-6 text-center">Gestión de Cajas</h2>
+      <div className="container mx-auto p-6" style={{ color: theme.textColor, backgroundColor: theme.backgroundColor }}>
+        <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: theme.textColor }}>Gestión de Cajas</h2>
 
         {/* Barra de búsqueda, filtro de inactivos y botón para crear */}
         <div className="flex justify-between items-center mb-6">
           <input
             type="text"
             placeholder="Buscar caja"
-            className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="border rounded-lg py-2 px-4 w-1/2 shadow-sm focus:outline-none focus:ring-2 transition"
+            style={{
+              color: theme.textColor,
+              backgroundColor: theme.backgroundColor,
+              borderColor: theme.primaryColor,
+            }}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
           <button
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg shadow-sm transition transform hover:scale-105"
+            className="py-2 px-6 rounded-lg shadow-sm transition transform hover:scale-105"
+            style={{
+              backgroundColor: theme.primaryColor,
+              color: theme.textColor,
+            }}
             onClick={() => handleOpenModal()}
           >
             Crear Caja
@@ -101,11 +111,15 @@ const CajasPage = () => {
             <input
               type="checkbox"
               id="showInactive"
-              className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition"
+              className="mr-2 h-4 w-4 border rounded focus:ring transition"
+              style={{
+                backgroundColor: theme.backgroundColor,
+                borderColor: theme.primaryColor,
+              }}
               checked={showInactive}
               onChange={() => setShowInactive(!showInactive)}
             />
-            <label htmlFor="showInactive" className="text-gray-700">
+            <label htmlFor="showInactive" style={{ color: theme.textColor }}>
               Mostrar inactivos
             </label>
           </div>
@@ -113,37 +127,40 @@ const CajasPage = () => {
 
         {/* Tabla de cajas */}
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
-            <thead className="bg-gray-100 text-gray-700">
+          <table className="min-w-full border rounded-lg shadow-lg" style={{ backgroundColor: theme.backgroundColor }}>
+            <thead style={{ color: theme.textColor, backgroundColor: theme.primaryColor }}>
               <tr>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">ID</th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">Nombre</th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">Sucursal</th>
-                <th className="border-b border-gray-300 py-3 px-4 text-left">Acciones</th>
+                <th className="border-b py-3 px-4 text-left">ID</th>
+                <th className="border-b py-3 px-4 text-left">Nombre</th>
+                <th className="border-b py-3 px-4 text-left">Sucursal</th>
+                <th className="border-b py-3 px-4 text-left">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {currentCajas.map((caja) => (
                 <tr
                   key={caja.id}
-                  className={`${caja.activo ? "bg-white hover:bg-gray-50" : "bg-gray-200"} transition`}
+                  className={`${caja.activo ? '' : 'bg-gray-200'} transition`}
+                  style={{ color: theme.textColor }}
                 >
-                  <td className="border-b border-gray-200 py-3 px-4">{caja.id}</td>
-                  <td className="border-b border-gray-200 py-3 px-4">{caja.nombre}</td>
-                  <td className="border-b border-gray-200 py-3 px-4">{caja.sucursal?.nombre || 'N/A'}</td>
-                  <td className="border-b border-gray-200 py-3 px-4">
+                  <td className="border-b py-3 px-4">{caja.id}</td>
+                  <td className="border-b py-3 px-4">{caja.nombre}</td>
+                  <td className="border-b py-3 px-4">{caja.sucursal?.nombre || 'N/A'}</td>
+                  <td className="border-b py-3 px-4">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow-sm transition transform hover:scale-105 mr-2"
+                      className="py-1 px-3 rounded-lg shadow-sm transition transform hover:scale-105 mr-2"
+                      style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
                       onClick={() => handleOpenModal(caja)}
                     >
-                      <PencilSquareIcon className="h-5 w-5 mr-1" />
+                      <PencilSquareIcon className="h-5 w-5 mr-1 inline" />
                       Editar
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow-sm transition transform hover:scale-105"
+                      className="py-1 px-3 rounded-lg shadow-sm transition transform hover:scale-105"
+                      style={{ backgroundColor: '#FF4B4B', color: theme.textColor }}
                       onClick={() => handleDelete(caja.id)}
                     >
-                      <TrashIcon className="h-5 w-5 mr-1" />
+                      <TrashIcon className="h-5 w-5 mr-1 inline" />
                       Eliminar
                     </button>
                   </td>
@@ -158,15 +175,23 @@ const CajasPage = () => {
           <button
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
-            className="mx-2 py-2 px-4 bg-gray-300 rounded-lg disabled:opacity-50"
+            className="mx-2 py-2 px-4 rounded-lg transition"
+            style={{
+              backgroundColor: currentPage === 1 ? '#ddd' : theme.primaryColor,
+              color: currentPage === 1 ? '#999' : theme.textColor,
+            }}
           >
             Anterior
           </button>
-          <span className="py-2 px-4">{`Página ${currentPage} de ${totalPages}`}</span>
+          <span className="py-2 px-4" style={{ color: theme.textColor }}>{`Página ${currentPage} de ${totalPages}`}</span>
           <button
             disabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
-            className="mx-2 py-2 px-4 bg-gray-300 rounded-lg disabled:opacity-50"
+            className="mx-2 py-2 px-4 rounded-lg transition"
+            style={{
+              backgroundColor: currentPage === totalPages ? '#ddd' : theme.primaryColor,
+              color: currentPage === totalPages ? '#999' : theme.textColor,
+            }}
           >
             Siguiente
           </button>

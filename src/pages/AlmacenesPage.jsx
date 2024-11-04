@@ -7,8 +7,13 @@ import {
   deleteAlmacen,
 } from "../reducers/almacenSlice";
 import AlmacenModal from "../components/AlmacenModal";
-import { PencilSquareIcon, TrashIcon, BuildingStorefrontIcon } from "@heroicons/react/24/outline";
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  BuildingStorefrontIcon,
+} from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
+import PermissionWrapper from "../components/PermissionWrapper";
 
 const AlmacenesPage = () => {
   console.log("cargando almacenes");
@@ -36,7 +41,9 @@ const AlmacenesPage = () => {
 
   const handleSave = async (almacen) => {
     if (isEditing) {
-      await dispatch(updateAlmacen({ idSucursal: id, idAlmacen: almacen.id, almacen }));
+      await dispatch(
+        updateAlmacen({ idSucursal: id, idAlmacen: almacen.id, almacen })
+      );
     } else {
       await dispatch(addAlmacen({ idSucursal: id, almacen }));
     }
@@ -77,7 +84,9 @@ const AlmacenesPage = () => {
       />
 
       <div className="container mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center">Gestión de Almacenes</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Gestión de Almacenes
+        </h2>
 
         {/* Barra de búsqueda, filtro de inactivos y botón para crear */}
         <div className="flex justify-between items-center mb-6">
@@ -88,13 +97,14 @@ const AlmacenesPage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg shadow-sm transition transform hover:scale-105"
-            onClick={() => handleOpenModal()}
-          >
-            Crear Almacén
-          </button>
+          <PermissionWrapper permission="PERMISO_ADMINISTRAR_ALMACENES">
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg shadow-sm transition transform hover:scale-105"
+              onClick={() => handleOpenModal()}
+            >
+              Crear Almacén
+            </button>
+          </PermissionWrapper>
 
           <div className="flex items-center">
             <input
@@ -104,17 +114,30 @@ const AlmacenesPage = () => {
               checked={showInactive}
               onChange={() => setShowInactive(!showInactive)}
             />
-            <label htmlFor="showInactive" className="text-gray-700">Mostrar inactivos</label>
+            <label htmlFor="showInactive" className="text-gray-700">
+              Mostrar inactivos
+            </label>
           </div>
         </div>
 
         {/* Lista de almacenes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {paginatedAlmacenes.map((almacen) => (
-            <div key={almacen.id} className={`p-4 rounded-lg shadow-lg ${almacen.activo ? 'bg-white' : 'bg-gray-200'}`}>
-              <h3 className="text-xl font-bold mb-2">Almacén #{almacen.numero}</h3>
-              <p className="text-sm text-gray-600"><strong>Descripción:</strong> {almacen.descripcion}</p>
-              <p className="text-sm text-gray-600"><strong>Sucursal:</strong> {almacen.sucursal.nombre}</p>
+            <div
+              key={almacen.id}
+              className={`p-4 rounded-lg shadow-lg ${
+                almacen.activo ? "bg-white" : "bg-gray-200"
+              }`}
+            >
+              <h3 className="text-xl font-bold mb-2">
+                Almacén #{almacen.numero}
+              </h3>
+              <p className="text-sm text-gray-600">
+                <strong>Descripción:</strong> {almacen.descripcion}
+              </p>
+              <p className="text-sm text-gray-600">
+                <strong>Sucursal:</strong> {almacen.sucursal.nombre}
+              </p>
 
               <div className="flex justify-between items-center mt-4">
                 <button

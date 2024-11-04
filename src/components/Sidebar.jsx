@@ -12,29 +12,34 @@ import {
   ArrowRightOnRectangleIcon,
   ChevronDownIcon,
   ChevronUpIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { clearAuth } from "../reducers/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuth, selectHasPermission } from "../reducers/authSlice";
+import PermissionWrapper from "./PermissionWrapper";
+import { useTheme } from "../context/ThemeContext";
 
 const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
+  const { theme } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [isProductsOpen, setIsProductsOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(clearAuth());
-    navigate("/login");
+    navigate("/");
   };
 
   return (
     <div
-      className={`flex flex-col bg-gray-900 text-white w-64 py-6 px-3 absolute inset-y-0 left-0 transform ${
+      className={`flex flex-col text-white w-64 py-6 px-3 absolute inset-y-0 left-0 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } lg:relative lg:translate-x-0 transition duration-300 ease-in-out shadow-lg border-r border-gray-700`}
+      style={{ backgroundColor: theme.primaryColor }} // Aplicamos el color personalizado
     >
       {/* Botón para cerrar el sidebar en pantallas pequeñas */}
       <button
@@ -44,7 +49,11 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
         <XMarkIcon className="w-6 h-6 text-white" />
       </button>
 
-      <nav className="space-y-1 flex-1"> {/* Flex-1 para ocupar el espacio disponible */}
+      {/* Información del usuario en la parte superior del Sidebar */}
+
+      {/* Opciones de navegación */}
+      <nav className="space-y-1 flex-1">
+        {/* Opciones de Sucursales o vista general */}
         {!selectedSucursal ? (
           <>
             <Link
@@ -56,9 +65,9 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               <HomeIcon className="w-5 h-5 mr-2" /> Todas las Sucursales
             </Link>
             <Link
-              to="/ventas-globales"
+              to="/dashboard"
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
-                location.pathname === "/ventas-globales" ? "bg-red-700" : ""
+                location.pathname === "/dashboard" ? "bg-red-700" : ""
               }`}
             >
               <ShoppingCartIcon className="w-5 h-5 mr-2" /> Ventas Globales
@@ -72,6 +81,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               </h2>
             </div>
 
+            {/* Opciones de sucursal seleccionada */}
             <Link
               to={`/sucursales/${selectedSucursal.id}/panel/almacenes`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
@@ -106,17 +116,19 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
             </Link>
           </>
         )}
+        {/* Resto de las opciones de navegación */}
+        <PermissionWrapper permission="PERMISO_GESTIONAR_PERSONAL">
+          <Link
+            to="/usuarios"
+            className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+              location.pathname.includes("/usuarios") ? "bg-red-700" : ""
+            }`}
+          >
+            <UsersIcon className="w-5 h-5 mr-2" /> Personal
+          </Link>
+        </PermissionWrapper>
 
-        <Link
-          to="/employees"
-          className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
-            location.pathname.includes("/employees") ? "bg-red-700" : ""
-          }`}
-        >
-          <UsersIcon className="w-5 h-5 mr-2" /> Personal
-        </Link>
-
-        {/* Desplegable para Productos y Categorías */}
+        {/* Desplegable de Productos */}
         <div>
           <button
             className="w-full flex items-center text-left py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600"
@@ -150,7 +162,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
             </div>
           )}
         </div>
-
+        {/* Más opciones de navegación */}
         <Link
           to="/clientes"
           className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
@@ -159,18 +171,42 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
         >
           <UserIcon className="w-5 h-5 mr-2" /> Clientes
         </Link>
+
+        <PermissionWrapper permission="PERMISO_GESTIONAR_PROVEEDORES">
+          <Link
+            to="/proveedores"
+            className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+              location.pathname.includes("/proveedores") ? "bg-red-700" : ""
+            }`}
+          >
+            <TruckIcon className="w-5 h-5 mr-2" /> Proveedores
+          </Link>
+        </PermissionWrapper>
+
+        <PermissionWrapper permission="PERMISO_GESTIONAR_ROLES">
+          <Link
+            to="/roles"
+            className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+              location.pathname.includes("/roles") ? "bg-red-700" : ""
+            }`}
+          >
+            <UserGroupIcon className="w-5 h-5 mr-2" /> Roles
+          </Link>
+        </PermissionWrapper>
+        <PermissionWrapper permission="PERMISO_GESTIONAR_PERMISOS">
+          <Link
+            to="/permisos"
+            className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+              location.pathname.includes("/permisos") ? "bg-red-700" : ""
+            }`}
+          >
+            <ShieldCheckIcon className="w-5 h-5 mr-2" /> Permisos
+          </Link>
+        </PermissionWrapper>
         <Link
-          to="/proveedores"
+          to="/configuraciones"
           className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
-            location.pathname.includes("/proveedores") ? "bg-red-700" : ""
-          }`}
-        >
-          <TruckIcon className="w-5 h-5 mr-2" /> Proveedores
-        </Link>
-        <Link
-          to="/settings"
-          className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
-            location.pathname.includes("/settings") ? "bg-red-700" : ""
+            location.pathname.includes("/configuraciones") ? "bg-red-700" : ""
           }`}
         >
           <CogIcon className="w-5 h-5 mr-2" /> Configuración

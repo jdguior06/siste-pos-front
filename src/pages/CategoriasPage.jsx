@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategorias, addCategoria, updateCategoria, deleteCategoria } from "../reducers/categoriaSlice";
 import CategoriaModal from "../components/CategoriaModal";
 import CategoriaDeleteModal from "../components/CategoriaDeleteModal";
+import { useTheme } from "../context/ThemeContext"; // Importar useTheme para obtener los colores del tema
 
 const CategoriasPage = () => {
   const dispatch = useDispatch();
   const { categorias, loading, error } = useSelector((state) => state.categorias);
+  const { theme } = useTheme(); // Obtener el tema actual
 
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -58,23 +60,25 @@ const CategoriasPage = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (loading) return <div className="text-center text-xl">Cargando...</div>;
+  if (loading) return <div className="text-center text-xl" style={{ color: theme.textColor }}>Cargando...</div>;
   if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Gestión de Categorías</h2>
+    <div className="container mx-auto p-6" style={{ color: theme.textColor, backgroundColor: theme.backgroundColor }}>
+      <h2 className="text-3xl font-bold mb-6 text-center" style={{ color: theme.textColor }}>Gestión de Categorías</h2>
       
       <div className="flex justify-between items-center mb-6">
         <input
           type="text"
           placeholder="Buscar Categoría"
-          className="border border-gray-300 rounded-lg py-2 px-4 w-1/2 shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border rounded-lg py-2 px-4 w-1/2 shadow focus:outline-none focus:ring-2 transition"
+          style={{ color: theme.textColor, backgroundColor: theme.backgroundColor, borderColor: theme.primaryColor }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button
-          className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg shadow transform transition hover:scale-105"
+          className="py-2 px-6 rounded-lg shadow transform transition hover:scale-105"
+          style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
           onClick={() => handleOpenModal()}
         >
           Crear Categoría
@@ -85,42 +89,44 @@ const CategoriasPage = () => {
           <input
             type="checkbox"
             id="showInactive"
-            className="mr-2 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="mr-2 h-4 w-4 border rounded focus:ring transition"
+            style={{ backgroundColor: theme.backgroundColor, borderColor: theme.primaryColor }}
             checked={showInactive}
             onChange={() => setShowInactive(!showInactive)}
           />
-          <label htmlFor="showInactive" className="text-gray-700">Mostrar inactivos</label>
+          <label htmlFor="showInactive" style={{ color: theme.textColor }}>Mostrar inactivos</label>
         </div>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
-          <thead className="bg-gray-100">
+        <table className="min-w-full border rounded-lg shadow-lg" style={{ backgroundColor: theme.backgroundColor }}>
+          <thead className="text-gray-700" style={{ color: theme.textColor, backgroundColor: theme.primaryColor }}>
             <tr>
-              <th className="py-3 px-4 text-left text-gray-800 font-semibold">Nombre</th>
-              <th className="py-3 px-4 text-left text-gray-800 font-semibold">Descripción</th>
-              <th className="py-3 px-4 text-left text-gray-800 font-semibold">Acciones</th>
+              <th className="py-3 px-4 text-left font-semibold">Nombre</th>
+              <th className="py-3 px-4 text-left font-semibold">Descripción</th>
+              <th className="py-3 px-4 text-left font-semibold">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {currentCategorias.map((categoria) => (
               <tr
                 key={categoria.id}
-                className={`${
-                  categoria.activo ? "bg-white" : "bg-gray-200"
-                } hover:bg-gray-50 transition`}
+                className={`${categoria.activo ? '' : 'bg-gray-200'}`}
+                style={{ color: theme.textColor }}
               >
-                <td className="py-3 px-4 text-gray-700">{categoria.nombre}</td>
-                <td className="py-3 px-4 text-gray-700">{categoria.descripcion || "Sin descripción"}</td>
+                <td className="py-3 px-4">{categoria.nombre}</td>
+                <td className="py-3 px-4">{categoria.descripcion || "Sin descripción"}</td>
                 <td className="py-3 px-4 flex space-x-2">
                   <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow transform transition hover:scale-105"
+                    className="py-1 px-3 rounded-lg shadow transform transition hover:scale-105"
+                    style={{ backgroundColor: theme.primaryColor, color: theme.textColor }}
                     onClick={() => handleOpenModal(categoria)}
                   >
                     Editar
                   </button>
                   <button
-                    className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow transform transition hover:scale-105"
+                    className="py-1 px-3 rounded-lg shadow transform transition hover:scale-105"
+                    style={{ backgroundColor: '#FF4B4B', color: theme.textColor }}
                     onClick={() => handleOpenDeleteModal(categoria)}
                   >
                     Eliminar
@@ -137,9 +143,12 @@ const CategoriasPage = () => {
           {Array.from({ length: Math.ceil(filteredCategorias.length / categoriesPerPage) }, (_, i) => (
             <button
               key={i + 1}
-              className={`px-4 py-2 rounded-lg border ${
-                currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'
-              } shadow transition`}
+              className="px-4 py-2 rounded-lg border shadow transition"
+              style={{
+                backgroundColor: currentPage === i + 1 ? theme.primaryColor : theme.backgroundColor,
+                color: theme.textColor,
+                borderColor: theme.primaryColor,
+              }}
               onClick={() => paginate(i + 1)}
             >
               {i + 1}

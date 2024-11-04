@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { decodeJWT } from '../utils/jwt';
 
 const initialState = {
   user: null,
   token: null,
-  isAuthenticated: false,  // Asegúrate de que este valor esté inicialmente en `false`
+  permisos: [],  // Almacenamos los permisos aquí
+  isAuthenticated: false,
   loading: true,
 };
 
@@ -13,7 +13,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth(state, action) {
-      const { token, userEmail, nombre, apellido, role } = action.payload;
+      const { token, userEmail, nombre, apellido, role, permisos } = action.payload;
       
       state.token = token;
       state.user = {
@@ -22,16 +22,24 @@ const authSlice = createSlice({
         apellido,
         role,
       };
-      state.isAuthenticated = true;  // Cambiar a `true` al iniciar sesión
+      state.permisos = permisos;  // Guardamos los permisos en el estado
+      state.isAuthenticated = true;
       state.loading = false;
-      localStorage.setItem('token', token);
+
+      // Guardamos el objeto completo de autenticación en el localStorage
+      localStorage.setItem('auth', JSON.stringify({
+        token,
+        user: { email: userEmail, nombre, apellido, role },
+        permisos,
+      }));
     },
     clearAuth(state) {
       state.token = null;
       state.user = null;
-      state.isAuthenticated = false;  // Asegúrate de que se limpie correctamente al cerrar sesión
+      state.permisos = [];
+      state.isAuthenticated = false;
       state.loading = false;
-      localStorage.removeItem('token');
+      localStorage.removeItem('auth');  // Eliminamos el auth completo de localStorage
     },
     setLoading(state, action) {
       state.loading = action.payload;
@@ -39,5 +47,10 @@ const authSlice = createSlice({
   },
 });
 
+export const selectHasPermission = (state, permissionName) => {
+  return state.auth.permisos?.some((permiso) => permiso.nombre === permissionName) || false;
+};
+
+// Uso en los componentes
 export const { setAuth, clearAuth, setLoading } = authSlice.actions;
 export default authSlice.reducer;

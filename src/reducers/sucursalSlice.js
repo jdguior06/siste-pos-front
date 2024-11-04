@@ -45,7 +45,7 @@ export const updateSucursal = createAsyncThunk('sucursales/updateSucursal', asyn
 
 export const deleteSucursal = createAsyncThunk('sucursales/deleteSucursal', async (id, { rejectWithValue }) => {
   try {
-    const data = await deleteSucursalApi(id);
+    await deleteSucursalApi(id);
     return { id };
   } catch (error) {
     return rejectWithValue(error.message);

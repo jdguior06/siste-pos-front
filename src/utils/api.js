@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { logout } from '../services/authServices';
 
 const api = axios.create({
-  baseURL: 'http://107.20.164.132:8080/pos',
+  baseURL: 'http://localhost:8080/pos',
 });
 
 export const setAuthInterceptor = (store) => {
@@ -14,6 +15,17 @@ export const setAuthInterceptor = (store) => {
       return config;
     },
     (error) => Promise.reject(error)
+  );
+
+  api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        store.dispatch(logout());
+        window.location.href = '/login'; 
+      }
+      return Promise.reject(error);
+    }
   );
 };
 

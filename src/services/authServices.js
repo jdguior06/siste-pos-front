@@ -10,13 +10,14 @@ export const login = (username, password) => async (dispatch) => {
     // Guardamos el token en el localStorage
     localStorage.setItem('token', token);
 
-    // Disparamos la acción de autenticación con el token y los detalles del usuario
+    // Incluimos permisos en la acción de autenticación
     dispatch(setAuth({
       token,
       userEmail,
       nombre,
       apellido,
-      role: role.nombre,  // Usamos el campo "nombre" del rol
+      role: role.nombre,  // Nombre del rol
+      permisos: role.permiso,  // Los permisos del usuario (array de permisos)
     }));
 
     return { success: true, message: "Inicio de sesión exitoso" };
@@ -26,10 +27,9 @@ export const login = (username, password) => async (dispatch) => {
       ? error.response.data.message
       : "Error en la autenticación";
 
-    return { success: false, message };  // Retornamos el error para manejar en el componente
+    return { success: false, message };
   }
 };
-
 // Logout
 export const logout = () => (dispatch) => {
   localStorage.removeItem('token');  // Elimina el token
