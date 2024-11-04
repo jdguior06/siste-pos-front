@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   XMarkIcon,
@@ -27,12 +28,18 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isAlmacenesOpen, setIsAlmacenesOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(clearAuth());
     navigate("/");
   };
+
+  // Verifica si selectedSucursal no es null o undefined antes de intentar acceder a su id
+  const isInsideAlmacen = selectedSucursal &&
+    location.pathname.includes(`/sucursales/${selectedSucursal.id}/panel/almacenes`) &&
+    location.pathname.split("/").length >= 6;
 
   return (
     <div
@@ -41,7 +48,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
       } lg:relative lg:translate-x-0 transition duration-300 ease-in-out shadow-lg border-r border-gray-700`}
       style={{ backgroundColor: theme.primaryColor }} // Aplicamos el color personalizado
     >
-      {/* Botón para cerrar el sidebar en pantallas pequeñas */}
+       {/* Botón para cerrar el sidebar en pantallas pequeñas */}
       <button
         onClick={toggleSidebar}
         className="absolute top-2 right-2 lg:hidden"
@@ -80,7 +87,6 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
                 {selectedSucursal.nombre}
               </h2>
             </div>
-
             {/* Opciones de sucursal seleccionada */}
             <Link
               to={`/sucursales/${selectedSucursal.id}/panel/almacenes`}
@@ -90,6 +96,46 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
             >
               <CubeIcon className="w-5 h-5 mr-2" /> Almacenes
             </Link>
+            {/* Opción para Almacenes */}
+            <div>
+              <button
+                className="w-full flex items-center text-left py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600"
+                onClick={() => setIsAlmacenesOpen(!isAlmacenesOpen)}
+              >
+                <CubeIcon className="w-5 h-5 mr-2" /> Almacenes
+                {isAlmacenesOpen ? (
+                  <ChevronUpIcon className="w-5 h-5 ml-auto" />
+                ) : (
+                  <ChevronDownIcon className="w-5 h-5 ml-auto" />
+                )}
+              </button>
+              {isAlmacenesOpen && (
+                <div className="pl-6 space-y-1">
+                  <Link
+                    to={`/sucursales/${selectedSucursal.id}/panel/almacenes`}
+                    className={`block py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+                      location.pathname.includes("/panel/almacenes") &&
+                      !location.pathname.includes("/notas-entrada")
+                        ? "bg-red-700"
+                        : ""
+                    }`}
+                  >
+                    Gestionar Almacenes
+                  </Link>
+                  {isInsideAlmacen && (
+                    <Link
+                      to={`/sucursales/${selectedSucursal.id}/panel/almacenes/${location.pathname.split("/")[5]}/notas-entrada`}
+                      className={`block py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
+                        location.pathname.includes("/notas-entrada") ? "bg-red-700" : ""
+                      }`}
+                    >
+                      Notas de compras
+                    </Link>
+                  )}
+                </div>
+              )}
+            </div>
+
             <Link
               to={`/sucursales/${selectedSucursal.id}/panel/cajas`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
@@ -107,7 +153,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               <ShoppingCartIcon className="w-5 h-5 mr-2" /> Ventas
             </Link>
             <Link
-              to={`/sucursales/${selectedSucursal.id}/reportes`}
+              to={`/reportes`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
                 location.pathname.includes("/reportes") ? "bg-red-700" : ""
               }`}

@@ -10,6 +10,8 @@ import cajaReducer from './reducers/cajaSlice';
 import permisoReducer from './reducers/permisoSlice';
 import rolReducer from './reducers/rolSlice';
 import usuarioReducer from './reducers/usuarioSlice';
+import productAlmacenReducer from './reducers/productAlmacenSlice';
+import notaEntradaReducer from './reducers/notaEntradaSlice';
 import { setAuthInterceptor } from './utils/api';
 
 const authData = JSON.parse(localStorage.getItem('auth'));
@@ -37,6 +39,8 @@ export const store = configureStore({
     permisos: permisoReducer,
     roles: rolReducer,
     usuarios : usuarioReducer,
+    productAlmacenes: productAlmacenReducer,
+    notasEntrada: notaEntradaReducer
   },
   preloadedState,
 });

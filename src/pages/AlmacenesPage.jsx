@@ -12,15 +12,15 @@ import {
   TrashIcon,
   BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline";
-import { useParams } from "react-router-dom";
 import PermissionWrapper from "../components/PermissionWrapper";
+import { useParams, useNavigate } from "react-router-dom";
 
 const AlmacenesPage = () => {
   console.log("cargando almacenes");
   const dispatch = useDispatch();
   const { id } = useParams(); // Obtenemos el ID de la sucursal desde la URL
   const { almacenes, loading, error } = useSelector((state) => state.almacenes);
-
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [selectedAlmacen, setSelectedAlmacen] = useState(null);
@@ -37,6 +37,13 @@ const AlmacenesPage = () => {
     setSelectedAlmacen(almacen);
     setIsEditing(!!almacen);
     setOpenModal(true);
+  };
+
+  const handleSelectAlmacen= (almacen) => {
+    console.log('Almacen seleccionado:', almacen);
+     // Actualizamos el almacen seleccionado
+    console.log('Redirigiendo a:', `/sucursales/${id}/panel/almacenes/${almacen.id}`);
+    navigate(`/sucursales/${id}/panel/almacenes/${almacen.id}`);  // Redirigimos al inventario del almacen
   };
 
   const handleSave = async (almacen) => {
@@ -147,6 +154,14 @@ const AlmacenesPage = () => {
                   <PencilSquareIcon className="h-5 w-5 mr-1" />
                   Editar
                 </button>
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
+                  onClick={() => handleSelectAlmacen(almacen)}
+                >
+                  <PencilSquareIcon className="h-5 w-5 mr-1" />
+                  Seleccionar
+                </button>
+
 
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
