@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
   // Verifica si selectedSucursal no es null o undefined antes de intentar acceder a su id
   const isInsideAlmacen = selectedSucursal &&
     location.pathname.includes(`/sucursales/${selectedSucursal.id}/panel/almacenes`) &&
-    location.pathname.split("/").length > 5;
+    location.pathname.split("/").length >= 6;
 
   return (
     <div
@@ -107,7 +107,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
                   </Link>
                   {isInsideAlmacen && (
                     <Link
-                      to={`/sucursales/${selectedSucursal.id}/panel/almacenes/${selectedSucursal.id}/notas-entrada`}
+                      to={`/sucursales/${selectedSucursal.id}/panel/almacenes/${location.pathname.split("/")[5]}/notas-entrada`}
                       className={`block py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
                         location.pathname.includes("/notas-entrada") ? "bg-red-700" : ""
                       }`}
@@ -136,7 +136,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
               <ShoppingCartIcon className="w-5 h-5 mr-2" /> Ventas
             </Link>
             <Link
-              to={`/sucursales/${selectedSucursal.id}/reportes`}
+              to={`/reportes`}
               className={`flex items-center py-2 px-3 rounded-lg transition duration-200 hover:bg-red-600 ${
                 location.pathname.includes("/reportes") ? "bg-red-700" : ""
               }`}

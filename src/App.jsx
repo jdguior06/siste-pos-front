@@ -22,6 +22,8 @@ import { useDispatch } from "react-redux";
 import { clearAuth, setAuth } from "./reducers/authSlice";
 import InventarioPage from "./pages/InventarioPage";
 import NotasEntradaPage from "./pages/NotasEntradaPage";
+import ReportePage from "./pages/ReportePage";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -65,12 +67,14 @@ function App() {
             <Route path="/proveedores" element={<ProveedoresPage />} />
             <Route path="/productos" element={<ProductosPage />} />
             <Route path="/categorias" element={<CategoriasPage />} />
+            <Route path="/reportes" element={<ReportePage />} />
             <Route path="/sucursales" element={<SucursalesPage setSelectedSucursal={setSelectedSucursal} />} />
             <Route path="/sucursales/:id/panel" element={<SucursalPanel selectedSucursal={selectedSucursal} />}>
               <Route index element={<Navigate to="almacenes" replace />} />
               <Route path="almacenes" element={<AlmacenesPage />} />
               <Route path="cajas" element={<CajasPage />} />
-              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
+              {/* Ruta de inventario y notas de entrada dentro del almacén seleccionado */}
+               <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
               <Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
             </Route>
             {/* Ruta directa para configuración y backup */}

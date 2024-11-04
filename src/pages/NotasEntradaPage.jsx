@@ -1,22 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchNotasEntrada, crearNotaEntrada } from '../reducers/notaEntradaSlice';
-import { fetchDetallesNota } from '../reducers/detalleNotaSlice';
+import { fetchAlmacenes } from '../reducers/almacenSlice';
+import { fetchProveedores } from '../reducers/proveedorSlice';
 import NotaEntradaForm from '../components/NotaEntradaModal';
+import { fetchProductos } from '../reducers/productoSlice';
+import { useParams } from 'react-router-dom'; // Para acceder a los parámetros de la URL
+
 
 const NotaEntradaPage = () => {
   const dispatch = useDispatch();
+  const { id, idAlmacen } = useParams(); // Extrae idSucursal e idAlmacen de la URL
   
-  // Estado de Redux
-  const notasEntrada = useSelector((state) => state.notasEntrada.notasEntrada || []);
-  const loadingNotas = useSelector((state) => state.notasEntrada.loading);
-  // Estado para controlar la visibilidad del modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  console.log("ID de Sucursal:", id);
+  console.log("ID de Almacén:", idAlmacen)
+
+  const notasEntrada = useSelector((state) =>
+    (state.notasEntrada.notasEntrada || []).filter(nota => nota.almacenId === Number(idAlmacen))
+  );  // Filtra notas de entrada por idAlmacen
+
+  // Estado de Redux
+ 
+  const loadingNotas = useSelector((state) => state.notasEntrada.loading);
+  const productos = useSelector((state) => state.productos.productos); // Obtener productos desde Redux
+  const almacenes = useSelector((state) => state.almacenes.almacenes); 
+  const proveedores = useSelector((state) => state.proveedores.proveedores);
+  
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   // Cargar datos iniciales
   useEffect(() => {
     dispatch(fetchNotasEntrada());
+    dispatch(fetchProductos()); // Cargar productos desde Redux
+    dispatch(fetchAlmacenes()); // Cargar almacenes desde Redux
+    dispatch(fetchProveedores()); // Cargar proveedores desde Redux
   }, [dispatch]);
+
+  // Confirma si las notas de entrada están filtradas correctamente
+  console.log("Notas filtradas por Almacén:", notasEntrada);
 
   // Manejo de la creación de una nueva nota de entrada
   const handleCreateNota = (formData, setTotales) => {
@@ -30,6 +53,7 @@ const NotaEntradaPage = () => {
       });
   };
 
+
   return (
     <div>
       <h1>Nota de Entrada</h1>
@@ -41,9 +65,12 @@ const NotaEntradaPage = () => {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-lg w-1/2">
+          {console.log("Almacén seleccionado:", idAlmacen)}
             <NotaEntradaForm
-              almacenes={[]}  // Pasa aquí los datos de almacenes desde Redux o un array con datos
-              proveedores={[]} // Pasa aquí los datos de proveedores desde Redux o un array con datos
+              almacenId={idAlmacen}  // Pasa almacenId extraído de la URL al formulario
+              productos={productos}
+              almacenes={almacenes} 
+              proveedores={proveedores} 
               onSubmit={handleCreateNota}
             />
             <button onClick={() => setIsModalOpen(false)} className="mt-4 p-2 bg-red-500 text-white rounded">
@@ -65,7 +92,8 @@ const NotaEntradaPage = () => {
               <p>Almacén ID: {nota.almacenId}</p>
               <p>Total: {nota.total}</p>
             </div>
-          ))}
+          ))
+          }
         </div>
       )}
     </div>
