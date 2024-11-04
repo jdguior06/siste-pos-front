@@ -84,8 +84,7 @@ const ReportePage = () => {
        // 2. Todas las Sucursales y Almacenes Funciona
       else if (sucursalId === "all" && almacenId === "all" && !productoId && !proveedoresId) {
         console.log("Generando reporte para todas las Sucursales y sus Almacenes.");
-        console.log("Almacenes cargados antes del filtro:", almacenes); // Verificar todos los almacenes cargados
-      
+       
         autoTable(doc, {
           head: [["Sucursal", "Almacén"]],
           body: sucursales.flatMap((sucursal) => {

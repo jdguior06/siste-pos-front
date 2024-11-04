@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from "react";
 
-const NotaEntradaForm = ({ almacenes, proveedores, onSubmit }) => {
+const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { // Recibe productos como prop
   const [formData, setFormData] = useState({
-    almacen: 1,  // ID del almacén por defecto
+    almacen: almacenId || "", // Almacén inicializado con almacenId
     fecha: "",
     proveedor: "",
-    descuento: 0,
+    descuento: "",
     detalles: [
       { productoId: "", cantidad: 0, costoUnitario: 0 },
     ],
   });
+
+  useEffect(() => {
+    // Actualizar el almacen si almacenId cambia
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      almacen: almacenId || "", // Verifica si almacenId se pasa correctamente
+    }));
+  }, [almacenId]);
 
   // Estado para almacenar los datos calculados (subtotal y total) obtenidos del backend
   const [totales, setTotales] = useState({ subtotal: 0, total: 0 });
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    if (name === "almacen" || name === "proveedor" || name === "descuento" || name === "fecha") {
+    if (name === "proveedor" || name === "descuento" || name === "fecha") {
       setFormData({ ...formData, [name]: value });
     } else {
-      // Actualizar detalles de productos
       const newDetalles = [...formData.detalles];
       newDetalles[index][name] = value;
       setFormData({ ...formData, detalles: newDetalles });
@@ -93,10 +100,9 @@ const NotaEntradaForm = ({ almacenes, proveedores, onSubmit }) => {
             required
           >
             <option value="">Seleccione un producto</option>
-            {/* Suponiendo que tienes un array de productos */}
-            {/* productos.map((prod) => (
+            {productos.map((prod) => (
               <option key={prod.id} value={prod.id}>{prod.nombre}</option>
-            )) */}
+            ))}
           </select>
           <input
             type="number"

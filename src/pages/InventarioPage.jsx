@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchProductosAlmacen } from "../reducers/productAlmacenSlice";
 
 const InventarioPage = () => {
     const dispatch = useDispatch();
-    const { idAlmacen } = useParams();
+    const navigate = useNavigate();
+    const {id, idAlmacen } = useParams();
 
     // Seleccionar los productos del estado de Redux
     const { productosAlmacen, loading, error } = useSelector((state) => state.productAlmacenes);
@@ -29,6 +30,14 @@ const InventarioPage = () => {
     return (
         <div>
             <h1>Inventario del Almacén {idAlmacen}</h1>
+             {/* Botón para ir a Notas de Entrada */}
+             <button
+                onClick={() => navigate(`/sucursales/${id}/panel/almacenes/${idAlmacen}/notas-entrada`)}
+                className="p-2 bg-blue-500 text-white rounded mb-4"
+            >
+                Ver Notas de Entrada
+            </button>
+
             <table>
                 <thead>
                     <tr>
