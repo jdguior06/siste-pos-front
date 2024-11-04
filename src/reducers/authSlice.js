@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   user: null,
   token: null,
-  permisos: [],  // Almacenamos los permisos aquí
+  permisos: [],
   isAuthenticated: false,
   loading: true,
 };
@@ -14,7 +14,8 @@ const authSlice = createSlice({
   reducers: {
     setAuth(state, action) {
       const { token, userEmail, nombre, apellido, role, permisos } = action.payload;
-      
+
+      // Actualizar el estado con los datos de usuario
       state.token = token;
       state.user = {
         email: userEmail,
@@ -22,11 +23,11 @@ const authSlice = createSlice({
         apellido,
         role,
       };
-      state.permisos = permisos;  // Guardamos los permisos en el estado
+      state.permisos = permisos;
       state.isAuthenticated = true;
       state.loading = false;
 
-      // Guardamos el objeto completo de autenticación en el localStorage
+      // Guardar solo el objeto `auth` completo en localStorage
       localStorage.setItem('auth', JSON.stringify({
         token,
         user: { email: userEmail, nombre, apellido, role },
@@ -39,7 +40,9 @@ const authSlice = createSlice({
       state.permisos = [];
       state.isAuthenticated = false;
       state.loading = false;
-      localStorage.removeItem('auth');  // Eliminamos el auth completo de localStorage
+
+      // Eliminar `auth` del `localStorage` en una sola operación
+      localStorage.removeItem('auth');
     },
     setLoading(state, action) {
       state.loading = action.payload;
@@ -47,10 +50,12 @@ const authSlice = createSlice({
   },
 });
 
+// Selector para verificar si el usuario tiene un permiso específico
 export const selectHasPermission = (state, permissionName) => {
-  return state.auth.permisos?.some((permiso) => permiso.nombre === permissionName) || false;
+  return Array.isArray(state.auth.permisos) && 
+         state.auth.permisos.some((permiso) => permiso.nombre === permissionName);
 };
 
-// Uso en los componentes
+// Exportamos las acciones y el reducer
 export const { setAuth, clearAuth, setLoading } = authSlice.actions;
 export default authSlice.reducer;

@@ -2,22 +2,20 @@ import { setAuth, clearAuth } from '../reducers/authSlice';
 import api from '../utils/api';
 
 // Login
+// login function
 export const login = (username, password) => async (dispatch) => {
   try {
     const response = await api.post('/auth/login', { username, password });
     const { token, email: userEmail, nombre, apellido, role } = response.data;
 
-    // Guardamos el token en el localStorage
-    localStorage.setItem('token', token);
-
-    // Incluimos permisos en la acción de autenticación
+    // No es necesario guardar el token directamente en localStorage aquí.
     dispatch(setAuth({
       token,
       userEmail,
       nombre,
       apellido,
-      role: role.nombre,  // Nombre del rol
-      permisos: role.permiso,  // Los permisos del usuario (array de permisos)
+      role: role.nombre,
+      permisos: role.permiso,
     }));
 
     return { success: true, message: "Inicio de sesión exitoso" };
@@ -30,8 +28,10 @@ export const login = (username, password) => async (dispatch) => {
     return { success: false, message };
   }
 };
+
 // Logout
 export const logout = () => (dispatch) => {
   localStorage.removeItem('token');  // Elimina el token
   dispatch(clearAuth());  // Limpia el estado de autenticación en Redux
 };
+  

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { logout } from '../services/authServices';
+import { clearAuth } from '../reducers/authSlice';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/pos',
@@ -8,7 +8,7 @@ const api = axios.create({
 export const setAuthInterceptor = (store) => {
   api.interceptors.request.use(
     (config) => {
-      const token = store.getState().auth.token;  // Obtenemos el token
+      const token = store.getState().auth.token;
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -21,8 +21,8 @@ export const setAuthInterceptor = (store) => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        store.dispatch(logout());
-        window.location.href = '/login'; 
+        store.dispatch(clearAuth());
+        window.location.href = '/login'; // Redirige después de limpiar auth
       }
       return Promise.reject(error);
     }
@@ -30,4 +30,3 @@ export const setAuthInterceptor = (store) => {
 };
 
 export default api;
-
