@@ -72,7 +72,7 @@ function App() {
               <Route path="cajas" element={<CajasPage />} />
               {/* Ruta de inventario y notas de entrada dentro del almacén seleccionado */}
               <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
-              <Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
+<              Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
 
             </Route>
           </Route>

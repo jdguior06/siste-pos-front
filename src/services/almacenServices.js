@@ -21,6 +21,16 @@ export const fetchAlmacenApi = async (idSucursal, idAlmacen) => {
   }
 };
 
+// Nuevo servicio para obtener todos los almacenes sin filtrar por sucursal
+export const fetchAllAlmacenesApi = async () => {
+  try {
+    const response = await api.get(`/sucursales/0/almacen/todos`); // Se usa cualquier idSucursal (e.g., "0") porque no importa
+    return response.data.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error al obtener todos los almacenes');
+  }
+};
+
 // Crear un nuevo almacén en una sucursal
 export const addAlmacenApi = async (idSucursal, almacen) => {
   try {

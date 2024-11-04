@@ -7,15 +7,17 @@ import { fetchAlmacenes } from "../reducers/almacenSlice";
 import { fetchProductos } from "../reducers/productoSlice";
 import { fetchProveedores } from "../reducers/proveedorSlice";
 import { fetchProductosAlmacen } from "../reducers/productAlmacenSlice";
+import { fetchAllAlmacenes } from '../reducers/almacenSlice'; // Importa la nueva acción
+
 
 const ReportePage = () => {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [sucursalId, setSucursalId] = useState("all");
-  const [almacenId, setAlmacenId] = useState("");
+  const [almacenId, setAlmacenId] = useState(""); 
   const [productoId, setProductoId] = useState("");
   const [proveedoresId, setProveedoresId] = useState("");
-  const [almacenesCargados, setAlmacenesCargados] = useState(false); // Nuevo estado
+   // Nuevo estado
 
   const dispatch = useDispatch();
 
@@ -30,25 +32,10 @@ const ReportePage = () => {
   useEffect(() => {
     dispatch(fetchSucursales());
     dispatch(fetchProveedores());
+    dispatch(fetchAllAlmacenes()); // Llamada única para obtener todos los almacenes
   }, [dispatch]);
 
-  useEffect(() => {
-    const fetchAlmacenesBySucursal = async () => {
-      if (sucursalId === "all" && sucursales.length > 0) {
-        // Solo ejecutar cuando haya sucursales cargadas y se seleccionen todas
-        await Promise.all(
-          sucursales.map((sucursal) => dispatch(fetchAlmacenes(sucursal.id)))
-        );
-        setAlmacenesCargados(true);
-      } else if (sucursalId !== "all") {
-        // Cargar almacenes para una sucursal específica
-        dispatch(fetchAlmacenes(sucursalId));
-        setAlmacenId("all");
-        setAlmacenesCargados(true);
-      }
-    };
-    fetchAlmacenesBySucursal();
-  }, [dispatch, sucursales, sucursalId]);
+ 
 
   useEffect(() => {
     if (almacenId && almacenId !== "all") {
@@ -57,7 +44,16 @@ const ReportePage = () => {
     }
   }, [dispatch, almacenId]);
 
+  useEffect(() => {
+    console.log("Productos en Almacén cargados:", productosAlmacen);
+}, [productosAlmacen]);
+
   const generatePDF = () => {
+
+    // Forzar `almacenId` a `"all"` si `sucursalId` es `"all"` y `almacenId` está vacío
+    if (sucursalId === "all" && almacenId === "") {
+      setAlmacenId("all");
+    }
 
     console.log("Fecha Inicio:", fechaInicio);
     console.log("Fecha Fin:", fechaFin);
@@ -74,7 +70,7 @@ const ReportePage = () => {
     }
 
     // 1. Solo Sucursales seleccionadas FUNCIONA
-    if (sucursalId === "all" && (!almacenId || almacenId === "") && !productoId && !proveedoresId) {
+    if (sucursalId === "all" && almacenId === "" && !productoId && !proveedoresId) {
       console.log("Generando reporte solo con Sucursales seleccionadas.");
       autoTable(doc, {
         head: [["ID", "Nombre", "Dirección"]],
@@ -83,25 +79,31 @@ const ReportePage = () => {
       });
     }
 
-    // 2. Todas las Sucursales y Almacenes MEDIO
-    if (sucursalId === "all" && almacenId === "all") {
-      console.log("Generando reporte para todas las Sucursales y sus Almacenes.");
+   
 
-      autoTable(doc, {
-        head: [["Sucursal", "Almacén"]],
-        body: sucursales.flatMap((sucursal) => {
-          const almacenesDeSucursal = almacenes.filter((a) => a.sucursal && a.sucursal.id === sucursal.id);
-          return almacenesDeSucursal.length > 0
-            ? almacenesDeSucursal.map((almacen) => [sucursal.nombre, almacen.descripcion])
-            : [[sucursal.nombre, "Sin almacenes"]];
-        }),
-        startY: 40,
-      });
-    }
-
+       // 2. Todas las Sucursales y Almacenes Funciona
+      else if (sucursalId === "all" && almacenId === "all" && !productoId && !proveedoresId) {
+        console.log("Generando reporte para todas las Sucursales y sus Almacenes.");
+       
+        autoTable(doc, {
+          head: [["Sucursal", "Almacén"]],
+          body: sucursales.flatMap((sucursal) => {
+            // Filtrar almacenes por sucursal.id en lugar de id_sucursal
+            const almacenesDeSucursal = almacenes.filter(
+              (a) => a.sucursal.id === sucursal.id
+            );
+            console.log(`Almacenes encontrados para Sucursal ${sucursal.nombre} (ID ${sucursal.id}):`, almacenesDeSucursal);
+      
+            return almacenesDeSucursal.length > 0
+              ? almacenesDeSucursal.map((almacen) => [sucursal.nombre, almacen.descripcion])
+              : [[sucursal.nombre, "Sin almacenes"]];
+          }),
+          startY: 40,
+        });
+      }
 
     // 3. Una Sucursal y todos sus Almacenes FUNCIONA
-    else if (sucursalId && almacenId === "all" && !productoId && !proveedoresId) {
+    else if (sucursalId !== "all" && almacenId === "all" && !productoId && !proveedoresId) {
       const selectedAlmacenes = almacenes.filter(a => a.sucursal.id === Number(sucursalId));
       autoTable(doc, {
         head: [["Almacén"]],
@@ -121,11 +123,18 @@ const ReportePage = () => {
 
      // 5. Sucursal y Almacén específicos, Todos los Productos en ese Almacén 
      else if (sucursalId && almacenId && productoId === "all" && !proveedoresId) {
-      const selectedSucursal = sucursales.find(s => s.id === sucursalId);
-      const selectedAlmacen = almacenes.find(a => a.id === almacenId);
+      const selectedSucursal = sucursales.find(s => s.id === Number(sucursalId));
+      const selectedAlmacen = almacenes.find(a => a.id === Number(almacenId));
+   
+      // Filtrar productos por el almacen seleccionado
+      const productosEnAlmacen = productosAlmacen.filter(p => p.almacen_id === Number(almacenId));
+      console.log("Sucursal seleccionada:", selectedSucursal);
+      console.log("Almacén seleccionado:", selectedAlmacen);
+      console.log("Productos filtrados en el almacén seleccionado:", productosEnAlmacen);
+    
       autoTable(doc, {
         head: [["Sucursal", "Almacén", "Producto", "Descripción", "Stock"]],
-        body: productosAlmacen.map(p => [
+        body: productosEnAlmacen.map(p => [
           selectedSucursal ? selectedSucursal.nombre : "",
           selectedAlmacen ? selectedAlmacen.descripcion : "",
           p.nombre,
@@ -135,21 +144,32 @@ const ReportePage = () => {
         startY: 40
       });
     }
-
+   
+    
 // 6. Sucursal, Almacén, y un Producto específico
 else if (sucursalId && almacenId && productoId && !proveedoresId && productoId !== "all") {
   const selectedSucursal = sucursales.find(s => s.id === Number(sucursalId));
   const selectedAlmacen = almacenes.find(a => a.id === Number(almacenId));
   const selectedProducto = productos.find(p => p.id === Number(productoId));
   const productoAlmacen = productosAlmacen.find(p => p.id_producto === Number(productoId) && p.almacen_id === Number(almacenId));
+
   if (selectedProducto && productoAlmacen) {
-    doc.text(`Sucursal: ${selectedSucursal ? selectedSucursal.nombre : ""}`, 20, 40);
-    doc.text(`Almacén: ${selectedAlmacen ? selectedAlmacen.descripcion : ""}`, 20, 50);
-    doc.text(`Producto: ${selectedProducto.nombre}`, 20, 60);
-    doc.text(`Descripción: ${productoAlmacen.descripcion}`, 20, 70);
-    doc.text(`Stock: ${productoAlmacen.stock}`, 20, 80);
+    autoTable(doc, {
+      head: [["Sucursal", "Almacén", "Producto", "Descripción", "Stock"]],
+      body: [[
+        selectedSucursal ? selectedSucursal.nombre : "",
+        selectedAlmacen ? selectedAlmacen.descripcion : "",
+        selectedProducto.nombre,
+        productoAlmacen.descripcion,
+        productoAlmacen.stock
+      ]],
+      startY: 40 // Puedes ajustar esta coordenada para la posición inicial de la tabla
+    });
+  } else {
+    console.log("Producto específico no encontrado en el almacén especificado.");
   }
 }
+
 
     // 7. Solo Proveedores
     else if (!sucursalId && !almacenId && !productoId && proveedoresId === "all") {
@@ -210,7 +230,10 @@ else if (sucursalId && almacenId && productoId && !proveedoresId && productoId !
 
           <div style={{ flex: "1", marginRight: "10px" }}>
             <label style={{ display: "block", fontWeight: "bold", color: "#555" }}>Almacen</label>
-            <select value={almacenId} onChange={(e) => setAlmacenId(e.target.value)} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}>
+            <select value={almacenId} onChange={(e) => {const value = e.target.value;
+              console.log("Almacén seleccionado:", value); // Para verificar
+              setAlmacenId(Number(e.target.value));
+            }} style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}>
               <option value="all">Todos los Almacenes</option>
               {almacenes.map((almacen) => (
                 <option key={almacen.id} value={almacen.id}>
