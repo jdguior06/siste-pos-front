@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar, selectedSucursal }) => {
   // Verifica si selectedSucursal no es null o undefined antes de intentar acceder a su id
   const isInsideAlmacen = selectedSucursal &&
     location.pathname.includes(`/sucursales/${selectedSucursal.id}/panel/almacenes`) &&
-    location.pathname.split("/").length >= 6;
+    location.pathname.split("/").length >=npm 6;
 
   return (
     <div
