@@ -2,6 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   fetchNotasEntradaApi,
   fetchNotaEntradaApi,
+  fetchNotasByFechaApi,
+  fetchNotasByProveedorApi,
+  fetchNotasBySucursalAlmacenApi,
   crearNotaEntradaApi,
   eliminarNotaEntradaApi,
 } from '../services/notaEntradaService';  // Importamos los servicios API
@@ -19,6 +22,33 @@ export const fetchNotasEntrada = createAsyncThunk('notasEntrada/fetchNotasEntrad
 export const fetchNotaEntrada = createAsyncThunk('notasEntrada/fetchNotaEntrada', async (id, { rejectWithValue }) => {
   try {
     const data = await fetchNotaEntradaApi(id);
+    return data;  // Asegúrate de que la respuesta esté en el formato esperado
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchNotasByProveedor = createAsyncThunk('notasEntrada/fetchNotasByProveedorApi', async (id, { rejectWithValue }) => {
+  try {
+    const data = await fetchNotasByProveedorApi(id);
+    return data;  // Asegúrate de que la respuesta esté en el formato esperado
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchNotasByFecha = createAsyncThunk('notasEntrada/fetchNotasByFechaApi', async (fecha, { rejectWithValue }) => {
+  try {
+    const data = await fetchNotasByFechaApi(fecha);
+    return data;  // Asegúrate de que la respuesta esté en el formato esperado
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
+
+export const fetchNotasBySucursalAlmacen = createAsyncThunk('notasEntrada/fetchNotasBySucursalAlmacenApi', async (idSucursal, idAlmacen, { rejectWithValue }) => {
+  try {
+    const data = await fetchNotasBySucursalAlmacenApi(idSucursal, idAlmacen);
     return data;  // Asegúrate de que la respuesta esté en el formato esperado
   } catch (error) {
     return rejectWithValue(error.message);
@@ -72,6 +102,45 @@ const notaEntradaSlice = createSlice({
       .addCase(fetchNotaEntrada.fulfilled, (state, action) => {
         state.notaEntrada = action.payload;
         state.loading = false;
+      })
+      
+      // Fetch notas por proveedor
+      .addCase(fetchNotasByProveedor.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchNotasByProveedor.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notasEntrada = action.payload;
+      })
+      .addCase(fetchNotasByProveedor.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch notas por fecha
+      .addCase(fetchNotasByFecha.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchNotasByFecha.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notasEntrada = action.payload;
+      })
+      .addCase(fetchNotasByFecha.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch notas por sucursal y almacén
+      .addCase(fetchNotasBySucursalAlmacen.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchNotasBySucursalAlmacen.fulfilled, (state, action) => {
+        state.loading = false;
+        state.notasEntrada = action.payload;
+      })
+      .addCase(fetchNotasBySucursalAlmacen.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // Crear nota de entrada

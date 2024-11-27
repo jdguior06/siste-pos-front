@@ -21,13 +21,23 @@ export const fetchAlmacenApi = async (idSucursal, idAlmacen) => {
   }
 };
 
-// Nuevo servicio para obtener todos los almacenes sin filtrar por sucursal
-export const fetchAllAlmacenesApi = async () => {
+/// Obtener todos los almacenes sin filtrar por sucursal
+export const fetchAllAlmacenesSinFiltroApi = async () => {
   try {
     const response = await api.get(`/sucursales/0/almacen/todos`); // Se usa cualquier idSucursal (e.g., "0") porque no importa
     return response.data.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error al obtener todos los almacenes');
+  }
+};
+
+// Obtener almacén asociado a un proveedor
+export const fetchAlmacenPorProveedorApi = async (proveedorId) => {
+  try {
+    const response = await api.get(`/sucursales/0/almacen/proveedor/${proveedorId}`); // Usamos "0" porque el proveedor no depende de una sucursal específica
+    return response.data.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error al obtener el almacén asociado al proveedor');
   }
 };
 

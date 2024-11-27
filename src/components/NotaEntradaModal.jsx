@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from "react";
 
-const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { // Recibe productos como prop
+const NotaEntradaForm = ({ almacenId, proveedores, productos, onSubmit }) => {
   const [formData, setFormData] = useState({
-    almacen: almacenId || "", // Almacén inicializado con almacenId
+    almacen: almacenId || "",
     fecha: "",
     proveedor: "",
     descuento: "",
-    detalles: [
-      { productoId: "", cantidad: 0, costoUnitario: 0 },
-    ],
+    detalles: [{ productoId: "", cantidad: 0, costoUnitario: 0 }],
   });
 
+  const [totales, setTotales] = useState({ subtotal: 0, total: 0 });
+
   useEffect(() => {
-    // Actualizar el almacen si almacenId cambia
     setFormData((prevFormData) => ({
       ...prevFormData,
-      almacen: almacenId || "", // Verifica si almacenId se pasa correctamente
+      almacen: almacenId || "",
     }));
   }, [almacenId]);
 
-  // Estado para almacenar los datos calculados (subtotal y total) obtenidos del backend
-  const [totales, setTotales] = useState({ subtotal: 0, total: 0 });
-
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
-    if (name === "proveedor" || name === "descuento" || name === "fecha") {
+
+    if (["proveedor", "descuento", "fecha"].includes(name)) {
       setFormData({ ...formData, [name]: value });
     } else {
       const newDetalles = [...formData.detalles];
@@ -42,7 +39,7 @@ const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData, setTotales); // Llamar a la función de submit y actualizar los totales
+    onSubmit(formData, setTotales);
   };
 
   return (
@@ -71,7 +68,9 @@ const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { 
         >
           <option value="">Seleccione un proveedor</option>
           {proveedores.map((prov) => (
-            <option key={prov.id} value={prov.id}>{prov.nombre}</option>
+            <option key={prov.id} value={prov.id}>
+              {prov.nombre}
+            </option>
           ))}
         </select>
       </div>
@@ -91,7 +90,7 @@ const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { 
       <h3 className="text-lg font-semibold">Detalles</h3>
 
       {formData.detalles.map((detalle, index) => (
-        <div key={index} className="grid grid-cols-4 gap-4">
+        <div key={index} className="grid grid-cols-4 gap-4 items-center">
           <select
             name="productoId"
             value={detalle.productoId}
@@ -101,28 +100,44 @@ const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { 
           >
             <option value="">Seleccione un producto</option>
             {productos.map((prod) => (
-              <option key={prod.id} value={prod.id}>{prod.nombre}</option>
+              <option key={prod.id} value={prod.id}>
+                {prod.nombre}
+              </option>
             ))}
           </select>
-          <input
-            type="number"
-            name="cantidad"
-            value={detalle.cantidad}
-            onChange={(e) => handleInputChange(e, index)}
-            className="border p-2 rounded w-full"
-            required
-          />
-          <input
-            type="number"
-            name="costoUnitario"
-            value={detalle.costoUnitario}
-            onChange={(e) => handleInputChange(e, index)}
-            className="border p-2 rounded w-full"
-            required
-          />
+
+          <div>
+            <label htmlFor={`cantidad-${index}`} className="block mb-1 text-sm font-medium">
+              Cantidad
+            </label>
+            <input
+              id={`cantidad-${index}`}
+              type="number"
+              name="cantidad"
+              value={detalle.cantidad}
+              onChange={(e) => handleInputChange(e, index)}
+              className="border p-2 rounded w-full"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor={`costoUnitario-${index}`} className="block mb-1 text-sm font-medium">
+              Costo Unitario
+            </label>
+            <input
+              id={`costoUnitario-${index}`}
+              type="number"
+              name="costoUnitario"
+              value={detalle.costoUnitario}
+              onChange={(e) => handleInputChange(e, index)}
+              className="border p-2 rounded w-full"
+              required
+            />
+          </div>
         </div>
       ))}
-      
+
       <button
         type="button"
         onClick={addDetalle}
@@ -142,24 +157,14 @@ const NotaEntradaForm = ({  almacenId, proveedores, productos, onSubmit }) => { 
         />
       </div>
 
-      <div className="mt-4">
+      <div>
         <label>Subtotal</label>
-        <input
-          type="text"
-          value={totales.subtotal}
-          readOnly
-          className="border p-2 rounded w-full"
-        />
+        <input type="text" value={totales.subtotal} readOnly className="border p-2 rounded w-full" />
       </div>
 
       <div>
         <label>Total</label>
-        <input
-          type="text"
-          value={totales.total}
-          readOnly
-          className="border p-2 rounded w-full"
-        />
+        <input type="text" value={totales.total} readOnly className="border p-2 rounded w-full" />
       </div>
 
       <button type="submit" className="mt-4 p-2 bg-green-500 text-white rounded">

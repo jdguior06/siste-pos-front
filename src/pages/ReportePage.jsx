@@ -7,7 +7,7 @@ import { fetchAlmacenes } from "../reducers/almacenSlice";
 import { fetchProductos } from "../reducers/productoSlice";
 import { fetchProveedores } from "../reducers/proveedorSlice";
 import { fetchProductosAlmacen } from "../reducers/productAlmacenSlice";
-import { fetchAllAlmacenes } from '../reducers/almacenSlice'; // Importa la nueva acción
+import { fetchAllAlmacenesSinFiltro } from '../reducers/almacenSlice'; // Importa la nueva acción
 
 
 const ReportePage = () => {
@@ -32,7 +32,7 @@ const ReportePage = () => {
   useEffect(() => {
     dispatch(fetchSucursales());
     dispatch(fetchProveedores());
-    dispatch(fetchAllAlmacenes()); // Llamada única para obtener todos los almacenes
+    dispatch(fetchAllAlmacenesSinFiltro()); // Llamada única para obtener todos los almacenes
   }, [dispatch]);
 
  
