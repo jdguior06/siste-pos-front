@@ -46,14 +46,17 @@ export const fetchNotasByFecha = createAsyncThunk('notasEntrada/fetchNotasByFech
   }
 });
 
-export const fetchNotasBySucursalAlmacen = createAsyncThunk('notasEntrada/fetchNotasBySucursalAlmacenApi', async (idSucursal, idAlmacen, { rejectWithValue }) => {
-  try {
-    const data = await fetchNotasBySucursalAlmacenApi(idSucursal, idAlmacen);
-    return data;  // Asegúrate de que la respuesta esté en el formato esperado
-  } catch (error) {
-    return rejectWithValue(error.message);
+export const fetchNotasBySucursalAlmacen = createAsyncThunk(
+  'notasEntrada/fetchNotasBySucursalAlmacenApi',
+  async ({ idSucursal, idAlmacen }, { rejectWithValue }) => { // Debe ser un objeto
+    try {
+      const data = await fetchNotasBySucursalAlmacenApi(idSucursal, idAlmacen);
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 
 export const crearNotaEntrada = createAsyncThunk('notasEntrada/crearNotaEntrada', async (notaEntradaCompletoDto, { rejectWithValue }) => {
   try {
