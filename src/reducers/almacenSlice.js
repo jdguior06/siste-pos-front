@@ -103,7 +103,6 @@ const almacenSlice = createSlice({
     .addCase(fetchAllAlmacenes.fulfilled, (state, action) => {
       state.loading = false;
       state.almacenes = action.payload; // Almacena todos los almacenes obtenidos
-      console.log("Todos los almacenes cargados:", state.almacenes);
     })
     .addCase(fetchAllAlmacenes.rejected, (state, action) => {
       state.loading = false;
@@ -116,7 +115,6 @@ const almacenSlice = createSlice({
       .addCase(fetchAlmacenes.fulfilled, (state, action) => {
         state.loading = false;
         state.almacenes = action.payload;
-        console.log("estado de almacenes", state.almacenes)
       })
       .addCase(fetchAlmacenes.rejected, (state, action) => {
         state.loading = false;

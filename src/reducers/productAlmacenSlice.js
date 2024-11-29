@@ -1,11 +1,9 @@
-// productoAlmacenSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
     fetchProductosAlmacenApi,
     fetchProductoAlmacenApi,
 } from '../services/productAlmacenService';
 
-// Thunk para obtener todos los productos en un almacén específico
 export const fetchProductosAlmacen = createAsyncThunk(
     'productoAlmacen/fetchProductosAlmacen',
     async (idAlmacen, { rejectWithValue }) => {
@@ -18,7 +16,6 @@ export const fetchProductosAlmacen = createAsyncThunk(
     }
 );
 
-// Thunk para obtener un producto específico en el almacén por su ID
 export const fetchProductoAlmacen = createAsyncThunk(
     'productoAlmacen/fetchProductoAlmacen',
     async (id, { rejectWithValue }) => {
@@ -31,9 +28,8 @@ export const fetchProductoAlmacen = createAsyncThunk(
     }
 );
 
-// Slice de ProductoAlmacen
 const productoAlmacenSlice = createSlice({
-    name: 'productoAlmacen',
+    name: 'productoAlmacenes',
     initialState: {
         productosAlmacen: [],
         productoAlmacen: null,

@@ -4,7 +4,6 @@ import api from '../utils/api';
 export const fetchAlmacenesApi = async (idSucursal) => {
   try {
     const response = await api.get(`/sucursales/${idSucursal}/almacen`);
-    console.log(response.data);
     return response.data.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error al obtener los almacenes');

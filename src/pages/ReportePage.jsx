@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { fetchSucursales } from "../reducers/sucursalSlice";
-import { fetchAlmacenes } from "../reducers/almacenSlice";
 import { fetchProductos } from "../reducers/productoSlice";
 import { fetchProveedores } from "../reducers/proveedorSlice";
 import { fetchProductosAlmacen } from "../reducers/productAlmacenSlice";
@@ -22,9 +21,7 @@ const ReportePage = () => {
   const dispatch = useDispatch();
 
   const sucursales = useSelector((state) => state.sucursales.sucursales);
-  console.log("Sucursales:", sucursales);
   const almacenes = useSelector((state) => state.almacenes.almacenes);
-  console.log("Almacenes:", almacenes);
   const productos = useSelector((state) => state.productos.productos);
   const proveedores = useSelector((state) => state.proveedores.proveedores);
   const productosAlmacen = useSelector((state) => state.productAlmacenes?.productosAlmacen || []);

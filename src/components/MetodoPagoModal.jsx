@@ -1,0 +1,165 @@
+import { useState, useMemo, useEffect } from "react";
+
+const MetodoPagoModal = ({ open, onClose, total, onSave }) => {
+  
+  const [metodosPago, setMetodosPago] = useState([
+    { tipoPago: "EFECTIVO", monto: "", detalles: "" },
+  ]);
+  const [error, setError] = useState("");
+
+  const cambio = useMemo(() => {
+    const sumaPagos = metodosPago.reduce(
+      (acc, metodo) => acc + parseFloat(metodo.monto || 0),
+      0
+    );
+    return sumaPagos > total ? (sumaPagos - total).toFixed(2) : "0.00";
+  }, [metodosPago, total]);
+
+  const handleMontoChange = (index, value) => {
+    const updatedMetodosPago = [...metodosPago];
+    updatedMetodosPago[index].monto = value;
+    setMetodosPago(updatedMetodosPago);
+  };
+
+  const handleMontoBlur = (index) => {
+    const updatedMetodosPago = [...metodosPago];
+    const monto = parseFloat(updatedMetodosPago[index].monto || 0).toFixed(2);
+    updatedMetodosPago[index].monto = monto;
+    setMetodosPago(updatedMetodosPago);
+  };
+
+  const handleDetallesChange = (index, value) => {
+    const updatedMetodosPago = [...metodosPago];
+    updatedMetodosPago[index].detalles = value;
+    setMetodosPago(updatedMetodosPago);
+  };
+
+  const handleAgregarMetodo = () => {
+    setMetodosPago([
+      ...metodosPago,
+      { tipoPago: "TARJETA", monto: "", detalles: "" },
+    ]);
+  };
+
+  const handleEliminarMetodo = (index) => {
+    setMetodosPago(metodosPago.filter((_, i) => i !== index));
+  };
+
+  const handleSave = () => {
+    const sumaPagos = metodosPago.reduce(
+      (acc, metodo) => acc + parseFloat(metodo.monto || 0),
+      0
+    );
+
+    if (sumaPagos < total) {
+      setError(
+        `El total de los métodos de pago (${sumaPagos.toFixed(2)}) no cubre el total de la venta (${total.toFixed(2)}).`
+      );
+      return;
+    }
+
+    setError("");
+    onSave(
+      metodosPago.map((metodo) => ({
+        ...metodo,
+        monto: parseFloat(metodo.monto || 0),
+      }))
+    );
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4 text-center">Métodos de Pago</h2>
+        <div className="space-y-4">
+          {metodosPago.map((metodo, index) => (
+            <div key={index} className="border rounded-lg p-4 bg-gray-50">
+              <label className="block font-semibold mb-1">Método de Pago</label>
+              <select
+                value={metodo.tipoPago}
+                onChange={(e) => {
+                  const updatedMetodosPago = [...metodosPago];
+                  updatedMetodosPago[index].tipoPago = e.target.value;
+                  setMetodosPago(updatedMetodosPago);
+                }}
+                className="border rounded w-full px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="EFECTIVO">Efectivo</option>
+                <option value="TARJETA">Tarjeta</option>
+                <option value="OTROS">Otros</option>
+              </select>
+
+              <label className="block font-semibold mb-1">Monto</label>
+              <input
+                type="number"
+                name={`monto-${index}`}
+                value={metodo.monto}
+                onChange={(e) => handleMontoChange(index, e.target.value)}
+                onBlur={() => handleMontoBlur(index)} // Formatear con decimales al perder el foco
+                className="border rounded w-full px-3 py-2 mb-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Ingrese el monto"
+                min="0"
+                step="0.01"
+              />
+
+              <label className="block font-semibold mb-1">Detalles</label>
+              <textarea
+                value={metodo.detalles}
+                onChange={(e) => handleDetallesChange(index, e.target.value)}
+                className="border rounded w-full px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              />
+
+              {index > 0 && (
+                <button
+                  onClick={() => handleEliminarMetodo(index)}
+                  className="mt-3 bg-red-500 text-white px-4 py-2 rounded w-full hover:bg-red-600"
+                >
+                  Eliminar Método
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {error && (
+          <p className="text-red-500 mt-4 text-center font-semibold">
+            {error}
+          </p>
+        )}
+
+        {/* Muestra el cambio calculado */}
+        <div className="mt-4 border-t pt-4">
+          <p className="text-lg font-semibold">
+            Cambio: <span className="text-green-600">${cambio}</span>
+          </p>
+        </div>
+
+        <div className="mt-6 flex justify-between">
+          <button
+            onClick={onClose}
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleSave}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Confirmar Pago
+          </button>
+        </div>
+
+        <button
+          onClick={handleAgregarMetodo}
+          className="mt-4 bg-green-500 text-white px-4 py-2 rounded w-full hover:bg-green-600"
+        >
+          Agregar Método de Pago
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default MetodoPagoModal;

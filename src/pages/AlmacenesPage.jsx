@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAlmacenes,
@@ -7,16 +7,11 @@ import {
   deleteAlmacen,
 } from "../reducers/almacenSlice";
 import AlmacenModal from "../components/AlmacenModal";
-import {
-  PencilSquareIcon,
-  TrashIcon,
-  BuildingStorefrontIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import PermissionWrapper from "../components/PermissionWrapper";
 import { useParams, useNavigate } from "react-router-dom";
 
 const AlmacenesPage = () => {
-  console.log("cargando almacenes");
   const dispatch = useDispatch();
   const { id } = useParams(); // Obtenemos el ID de la sucursal desde la URL
   const { almacenes, loading, error } = useSelector((state) => state.almacenes);
@@ -27,10 +22,10 @@ const AlmacenesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showInactive, setShowInactive] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Número de almacenes por página
+  const itemsPerPage = 5; 
 
   useEffect(() => {
-    dispatch(fetchAlmacenes(id)); // Fetch almacenes para la sucursal
+    dispatch(fetchAlmacenes(id)); 
   }, [dispatch, id]);
 
   const handleOpenModal = (almacen = null) => {
@@ -39,11 +34,8 @@ const AlmacenesPage = () => {
     setOpenModal(true);
   };
 
-  const handleSelectAlmacen= (almacen) => {
-    console.log('Almacen seleccionado:', almacen);
-     // Actualizamos el almacen seleccionado
-    console.log('Redirigiendo a:', `/sucursales/${id}/panel/almacenes/${almacen.id}`);
-    navigate(`/sucursales/${id}/panel/almacenes/${almacen.id}`);  // Redirigimos al inventario del almacen
+  const handleSelectAlmacen = (almacen) => {
+    navigate(`/sucursales/${id}/panel/almacenes/${almacen.id}`);
   };
 
   const handleSave = async (almacen) => {
@@ -152,23 +144,21 @@ const AlmacenesPage = () => {
                   onClick={() => handleOpenModal(almacen)}
                 >
                   <PencilSquareIcon className="h-5 w-5 mr-1" />
-                  Editar
                 </button>
-                <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
-                  onClick={() => handleSelectAlmacen(almacen)}
-                >
-                  <PencilSquareIcon className="h-5 w-5 mr-1" />
-                  Seleccionar
-                </button>
-
 
                 <button
                   className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
                   onClick={() => handleDelete(almacen.id)}
                 >
                   <TrashIcon className="h-5 w-5 mr-1" />
-                  Eliminar
+                </button>
+
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg shadow-sm flex items-center"
+                  onClick={() => handleSelectAlmacen(almacen)}
+                >
+                  <PencilSquareIcon className="h-5 w-5 mr-1" />
+                  Seleccionar
                 </button>
               </div>
             </div>

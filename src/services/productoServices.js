@@ -1,4 +1,4 @@
-import api from '../utils/api'; // Tu instancia de Axios configurada
+import api from '../utils/api'; 
 
 export const fetchProductosApi = async () => {
   try {
@@ -42,5 +42,14 @@ export const deleteProductoApi = async (id) => {
     return id;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error al eliminar producto');
+  }
+};
+
+export const fetchProductosConsolidadosApi = async (idSucursal) => {
+  try {
+    const response = await api.get(`/producto/consolidado/${idSucursal}`);
+    return response.data.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Error al obtener productos consolidados');
   }
 };

@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-
-
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProductos,
@@ -19,7 +17,6 @@ const ProductosPage = () => {
   const dispatch = useDispatch();
   const { productos, loading, error } = useSelector((state) => state.productos);
   const { categorias } = useSelector((state) => state.categorias);
-
   const [openModal, setOpenModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);

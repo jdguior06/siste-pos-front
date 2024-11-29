@@ -5,6 +5,7 @@ import {
   addProductoApi,
   updateProductoApi,
   deleteProductoApi,
+  fetchProductosConsolidadosApi,
 } from '../services/productoServices';  // Importamos los servicios API
 
 // Thunks para las acciones asíncronas
@@ -46,12 +47,24 @@ export const updateProducto = createAsyncThunk('productos/updateProducto', async
 
 export const deleteProducto = createAsyncThunk('productos/deleteProducto', async (id, { rejectWithValue }) => {
   try {
-    const data = await deleteProductoApi(id);
+    await deleteProductoApi(id);
     return { id };
   } catch (error) {
     return rejectWithValue(error.message);
   }
 });
+
+export const fetchProductosConsolidados = createAsyncThunk(
+  'productos/fetchConsolidados',
+  async (idSucursal, { rejectWithValue }) => {
+    try {
+      const data = await fetchProductosConsolidadosApi(idSucursal);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 // Slice de productos
 const productoSlice = createSlice({
@@ -59,6 +72,7 @@ const productoSlice = createSlice({
   initialState: {
     productos: [],
     producto: null,
+    productosConsolidados: [],
     loading: false,
     error: null,
   },
@@ -103,6 +117,19 @@ const productoSlice = createSlice({
       })
 
       .addCase(deleteProducto.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+
+      // Fetch productos consolidados
+      .addCase(fetchProductosConsolidados.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchProductosConsolidados.fulfilled, (state, action) => {
+        state.loading = false;
+        state.productosConsolidados = action.payload; // Asigna los productos consolidados
+      })
+      .addCase(fetchProductosConsolidados.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   },

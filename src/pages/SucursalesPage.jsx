@@ -133,7 +133,7 @@ const SucursalesPage = ({ setSelectedSucursal }) => {  // Añadimos setSelectedS
                   onClick={() => handleOpenModal(sucursal)}
                 >
                   <PencilSquareIcon className="h-5 w-5 mr-1" />
-                  Editar
+                  
                 </button>
 
                 <button
@@ -145,7 +145,7 @@ const SucursalesPage = ({ setSelectedSucursal }) => {  // Añadimos setSelectedS
                   onClick={() => handleDelete(sucursal.id)}
                 >
                   <TrashIcon className="h-5 w-5 mr-1" />
-                  Eliminar
+                  
                 </button>
 
                 <button

@@ -1,10 +1,7 @@
-// productoAlmacenService.js
-import api from '../utils/api'; // Tu instancia de Axios configurada
+import api from '../utils/api'; 
 
-// Obtener productos en un almacén específico si se pasa idAlmacen, o todos si no se pasa
 export const fetchProductosAlmacenApi = async (idAlmacen) => {
   try {
-    /* const endpoint = idAlmacen ? `/productos-almacen?almacen=${idAlmacen}` : '/productos-almacen'; */
     const endpoint = idAlmacen ? `/almacen/${idAlmacen}/productos-almacen` : '/almacen/productos';
     const response = await api.get(endpoint);
     return response.data.data;

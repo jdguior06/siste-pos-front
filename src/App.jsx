@@ -1,5 +1,4 @@
-// src/App.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import Home from "./pages/Home";
 import PlanPage from "./pages/CatalogoPlanes";
@@ -29,6 +28,7 @@ import api from './utils/api';
 import InventarioPage from "./pages/InventarioPage";
 import NotasEntradaPage from "./pages/NotasEntradaPage";
 import ReportePage from "./pages/ReportePage";
+import PosPage from "./pages/PosPage";
 
 
 function App() {
@@ -94,7 +94,6 @@ function App() {
               <Route index element={<Navigate to="almacenes" replace />} />
               <Route path="almacenes" element={<AlmacenesPage />} />
               <Route path="cajas" element={<CajasPage />} />
-              {/* Ruta de inventario y notas de entrada dentro del almacén seleccionado */}
                <Route path="/sucursales/:id/panel/almacenes/:idAlmacen" element={<InventarioPage />} />
               <Route path="/sucursales/:id/panel/almacenes/:idAlmacen/notas-entrada" element={<NotasEntradaPage />} />
             </Route>
@@ -102,6 +101,8 @@ function App() {
             <Route path="/settings" element={<ConfiguracionForm />} />
             <Route path="/backup" element={<BackupForm />} />
           </Route>
+          {/* <Route path="cajas/:cajaId/sesion" element={<PosPage />} /> */}
+          <Route path="cajas/:cajaId/sesion/:sesionId" element={<PosPage />} />
         </Route>
         {/* Ruta para cualquier otro acceso a rutas inválidas */}
         <Route path="*" element={<Navigate to="/home" />} />

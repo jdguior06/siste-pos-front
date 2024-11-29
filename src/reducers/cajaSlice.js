@@ -36,9 +36,9 @@ export const addCaja = createAsyncThunk(
 // Actualizar una caja en una sucursal
 export const updateCaja = createAsyncThunk(
   'cajas/updateCaja',
-  async ({ idSucursal, idCaja, caja }, { rejectWithValue }) => {
+  async ({ idSucursal, id_caja, caja }, { rejectWithValue }) => {
     try {
-      const data = await updateCajaApi(idSucursal, idCaja, caja);
+      const data = await updateCajaApi(idSucursal, id_caja, caja);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -77,7 +77,6 @@ const cajaSlice = createSlice({
       .addCase(fetchCajas.fulfilled, (state, action) => {
         state.loading = false;
         state.cajas = action.payload || [];
-        console.log("estado de cajas", state.cajas)
       })
       .addCase(fetchCajas.rejected, (state, action) => {
         state.loading = false;

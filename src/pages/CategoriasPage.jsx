@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategorias, addCategoria, updateCategoria, deleteCategoria } from "../reducers/categoriaSlice";
 import CategoriaModal from "../components/CategoriaModal";
@@ -46,6 +46,7 @@ const CategoriasPage = () => {
       dispatch(addCategoria(categoria));
     }
     setOpenModal(false);
+    dispatch(fetchCategorias());
   };
 
   // Filtrar categorías según búsqueda y estado activo/inactivo

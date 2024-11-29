@@ -43,8 +43,7 @@ export const updateCategoriaApi = async (id, categoria) => {
 // Eliminar (desactivar) una categoría
 export const deleteCategoriaApi = async (id) => {
   try {
-    const response = await api.patch(`/categoria/${id}/desactivar`);
-    console.log(response.data)
+    await api.patch(`/categoria/${id}/desactivar`);
     return id;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Error al desactivar la categoría');
