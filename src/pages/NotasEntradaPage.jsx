@@ -90,14 +90,15 @@ const NotaEntradaPage = () => {
         <div>
           {notasEntrada.length > 0 ? (
             notasEntrada.map((nota) => (
+              console.log(nota),
               <div
                 key={nota.id}
                 className="p-4 border border-gray-300 rounded mb-4 cursor-pointer hover:bg-gray-100"
                 onClick={() => handleRowClick(nota)}
               >
                 <p><strong>Nota ID:</strong> {nota.id}</p>
-                <p><strong>Proveedor:</strong> {nota.proveedorId}</p>
-                <p><strong>Almacén:</strong> {nota.almacenId}</p>
+                {/* <p><strong>Proveedor:</strong> {nota.proveedorId}</p>
+                <p><strong>Almacén:</strong> {nota.almacenId}</p> */}
                 <p><strong>Total:</strong> ${nota.total}</p>
               </div>
             ))

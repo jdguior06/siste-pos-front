@@ -52,8 +52,10 @@ export const fetchNotasByFechaApi = async (fecha) => {
 export const fetchNotasBySucursalAlmacenApi = async (idSucursal, idAlmacen) => {
   try {
     const response = await api.get(`/notaEntrada/Sucursal/${idSucursal}/almacen/${idAlmacen}`);
+    console.log("response", response.data);
     return response.data; // O ajusta según la estructura de tu respuesta
   } catch (error) {
+    console.log("error", error);
     throw new Error(
       error.response?.data?.message || 'Error al obtener la nota de entrada'
     );
