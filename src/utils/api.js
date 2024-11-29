@@ -2,7 +2,7 @@ import axios from 'axios';
 import { clearAuth } from '../reducers/authSlice';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/pos/pos',
+  baseURL: 'http://98.85.18.243:8080/pos/pos',
 });
 
 export const setAuthInterceptor = (store) => {
