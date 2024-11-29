@@ -2,25 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   fetchAlmacenesApi,
   fetchAlmacenApi,
+  fetchAllAlmacenesSinFiltroApi,
+  fetchAlmacenPorProveedorApi,
   addAlmacenApi,
   updateAlmacenApi,
   deleteAlmacenApi,
-  fetchAllAlmacenesApi,
 } from '../services/almacenServices';
 
-export const fetchAllAlmacenes = createAsyncThunk(
-  'almacenes/fetchAllAlmacenes',
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await fetchAllAlmacenesApi(); // Llama al servicio para obtener todos los almacenes
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-// Obtener todos los almacenes de una sucursal
+// Obtener almacenes de una sucursal
 export const fetchAlmacenes = createAsyncThunk(
   'almacenes/fetchAlmacenes',
   async (idSucursal, { rejectWithValue }) => {
@@ -39,6 +28,32 @@ export const fetchAlmacen = createAsyncThunk(
   async ({ idSucursal, idAlmacen }, { rejectWithValue }) => {
     try {
       const data = await fetchAlmacenApi(idSucursal, idAlmacen);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+/// Obtener todos los almacenes sin filtrar por sucursal
+export const fetchAllAlmacenesSinFiltro = createAsyncThunk(
+  'almacenes/fetchAllAlmacenesSinFiltro',
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchAllAlmacenesSinFiltroApi();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Obtener almacén asociado a un proveedor
+export const fetchAlmacenPorProveedor = createAsyncThunk(
+  'almacenes/fetchAlmacenPorProveedor',
+  async (proveedorId, { rejectWithValue }) => {
+    try {
+      const data = await fetchAlmacenPorProveedorApi(proveedorId);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -96,19 +111,7 @@ const almacenSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    //fetch all almacenes
-    .addCase(fetchAllAlmacenes.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(fetchAllAlmacenes.fulfilled, (state, action) => {
-      state.loading = false;
-      state.almacenes = action.payload; // Almacena todos los almacenes obtenidos
-    })
-    .addCase(fetchAllAlmacenes.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    })
-      // Fetch almacenes
+      // Obtener almacenes de una sucursal
       .addCase(fetchAlmacenes.pending, (state) => {
         state.loading = true;
       })
@@ -121,30 +124,41 @@ const almacenSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Fetch almacén
+      // Obtener un almacén específico de una sucursal
       .addCase(fetchAlmacen.fulfilled, (state, action) => {
         state.almacen = action.payload;
         state.loading = false;
       })
 
-      // Add almacén
+      // Obtener todos los almacenes sin filtrar por sucursal
+      .addCase(fetchAllAlmacenesSinFiltro.fulfilled, (state, action) => {
+        state.almacenes = action.payload;
+        state.loading = false;
+      })
+
+      // Obtener almacén asociado a un proveedor
+      .addCase(fetchAlmacenPorProveedor.fulfilled, (state, action) => {
+        state.almacenes = action.payload;
+        state.loading = false;
+      })
+
+      // Crear un almacén
       .addCase(addAlmacen.fulfilled, (state, action) => {
         state.almacenes.push(action.payload);
       })
 
-      // Update almacén
+      // Actualizar un almacén
       .addCase(updateAlmacen.fulfilled, (state, action) => {
-        const index = state.almacenes.findIndex(almacen => almacen.id === action.payload.id);
+        const index = state.almacenes.findIndex((almacen) => almacen.id === action.payload.id);
         if (index !== -1) {
           state.almacenes[index] = action.payload;
         }
       })
 
-      // Delete almacén (desactivar)
+      // Desactivar un almacén
       .addCase(deleteAlmacen.fulfilled, (state, action) => {
-        state.almacenes = state.almacenes.filter(almacen => almacen.id !== action.payload.idAlmacen);
+        state.almacenes = state.almacenes.filter((almacen) => almacen.id !== action.payload.idAlmacen);
       })
-
       .addCase(deleteAlmacen.rejected, (state, action) => {
         state.error = action.payload;
       });
