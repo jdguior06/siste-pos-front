@@ -3,10 +3,11 @@ import React from "react";
 const DetallesNotaModal = ({ nota, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-2/3 max-w-4xl">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-2/3 max-w-4xl relative">
+        {/* Botón de cerrar dentro del contenedor */}
         <button
           className="absolute top-4 right-4 text-red-500 font-bold"
-          onClick={onClose}
+          onClick={onClose} // Asegúrate de pasar el onClose correctamente
         >
           Cerrar
         </button>
@@ -15,8 +16,9 @@ const DetallesNotaModal = ({ nota, onClose }) => {
         </h2>
 
         <div className="mb-4">
+          {/* Muestra correctamente los detalles */}
           <p><strong>Fecha:</strong> {nota.fecha}</p>
-          <p><strong>Proveedor:</strong> {nota.proveedor}</p>
+          <p><strong>Proveedor:</strong> {nota.proveedor?.nombre || 'No disponible'}</p>
           <p><strong>Monto Total:</strong> ${nota.montoTotal}</p>
         </div>
 
@@ -24,6 +26,7 @@ const DetallesNotaModal = ({ nota, onClose }) => {
           <thead>
             <tr className="bg-gray-100">
               <th className="border border-gray-300 px-4 py-2">Producto</th>
+              <th className="border border-gray-300 px-4 py-2">Categoría</th>
               <th className="border border-gray-300 px-4 py-2">Cantidad</th>
               <th className="border border-gray-300 px-4 py-2">Costo Unitario</th>
               <th className="border border-gray-300 px-4 py-2">Subtotal</th>
@@ -33,7 +36,10 @@ const DetallesNotaModal = ({ nota, onClose }) => {
             {nota.detalles.map((detalle, index) => (
               <tr key={index}>
                 <td className="border border-gray-300 px-4 py-2">
-                  {detalle.producto}
+                  {detalle.producto?.nombre || 'No disponible'}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {detalle.producto?.categoria?.nombre || 'Sin categoría'}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {detalle.cantidad}
@@ -42,7 +48,7 @@ const DetallesNotaModal = ({ nota, onClose }) => {
                   ${detalle.costoUnitario}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  ${detalle.subtotal}
+                  ${detalle.subTotal}
                 </td>
               </tr>
             ))}
