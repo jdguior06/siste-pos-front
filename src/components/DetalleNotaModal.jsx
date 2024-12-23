@@ -17,9 +17,25 @@ const DetallesNotaModal = ({ nota, onClose }) => {
 
         <div className="mb-4">
           {/* Muestra correctamente los detalles */}
-          <p><strong>Fecha:</strong> {nota.fecha}</p>
-          <p><strong>Proveedor:</strong> {nota.proveedor?.nombre || 'No disponible'}</p>
-          <p><strong>Monto Total:</strong> ${nota.montoTotal}</p>
+          <p>
+            <strong>Fecha:</strong>{" "}
+            {new Date(nota.fecha).toLocaleString("es-ES", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false, // Usa formato 24 horas
+            })}
+          </p>
+          <p>
+            <strong>Proveedor:</strong>{" "}
+            {nota.proveedor?.nombre || "No disponible"}
+          </p>
+          <p>
+            <strong>Monto Total:</strong> Bs. {nota.total}
+          </p>
         </div>
 
         <table className="table-auto w-full border-collapse border border-gray-300">
@@ -28,7 +44,9 @@ const DetallesNotaModal = ({ nota, onClose }) => {
               <th className="border border-gray-300 px-4 py-2">Producto</th>
               <th className="border border-gray-300 px-4 py-2">Categoría</th>
               <th className="border border-gray-300 px-4 py-2">Cantidad</th>
-              <th className="border border-gray-300 px-4 py-2">Costo Unitario</th>
+              <th className="border border-gray-300 px-4 py-2">
+                Costo Unitario
+              </th>
               <th className="border border-gray-300 px-4 py-2">Subtotal</th>
             </tr>
           </thead>
@@ -36,10 +54,10 @@ const DetallesNotaModal = ({ nota, onClose }) => {
             {nota.detalles.map((detalle, index) => (
               <tr key={index}>
                 <td className="border border-gray-300 px-4 py-2">
-                  {detalle.producto?.nombre || 'No disponible'}
+                  {detalle.producto?.nombre || "No disponible"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {detalle.producto?.categoria?.nombre || 'Sin categoría'}
+                  {detalle.producto?.categoria?.nombre || "Sin categoría"}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   {detalle.cantidad}
@@ -56,7 +74,7 @@ const DetallesNotaModal = ({ nota, onClose }) => {
         </table>
 
         <div className="mt-4 text-right">
-          <p className="text-lg font-bold">Total: ${nota.montoTotal}</p>
+          <p className="text-lg font-bold">Total: Bs. {nota.total}</p>
         </div>
       </div>
     </div>
