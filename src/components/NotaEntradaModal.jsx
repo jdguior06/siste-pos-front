@@ -86,11 +86,22 @@ const NotaEntradaForm = ({ almacenId, proveedores, productos, onSubmit, onClose 
       return;
     }
 
-    onSubmit(formData)
-      .then(() => onClose()) // Cierra el modal si se guarda correctamente
-      .catch((error) => {
-        console.error("Error al guardar la nota de entrada:", error);
-      });
+    try {
+      const submitResult = onSubmit(formData); // onSubmit podría no retornar nada.
+      if (submitResult && typeof submitResult.then === "function") {
+        // Solo manejar si es una Promise
+        submitResult
+          .then(() => onClose())
+          .catch((error) => {
+            console.error("Error al guardar la nota de entrada:", error);
+          });
+      } else {
+        // Si no es una Promise, simplemente cerrar el modal
+        onClose();
+      }
+    } catch (error) {
+      console.error("Error al ejecutar onSubmit:", error);
+    }
   };
 
   return (
